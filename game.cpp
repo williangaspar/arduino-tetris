@@ -1,0 +1,33 @@
+#include "game.h"
+
+#include "screen.h"
+#include "shape.h"
+
+extern uint16_t z[4];
+extern uint16_t l[4];
+extern uint16_t j[4];
+extern uint16_t t[4];
+extern uint16_t line[4];
+extern uint16_t sqr[4];
+
+int32_t Game::score = 0;
+
+Shape Game::shapes[SHAPE_LIST_SIZE] = {
+    Shape(l, 3),
+    Shape(j, 3),
+    Shape(t, 3),
+    Shape(z, 3),
+    Shape(line, 4),
+    Shape(sqr, 4)};
+
+Shape* Game::getRandomShape() {
+  Shape* shape = &shapes[random(SHAPE_LIST_SIZE)];
+  shape->setRotationIndex(random(4));
+  shape->color = (random(SHAPE_LIST_SIZE));
+  return shape;
+}
+
+void Game::start() {
+  Game::score = 0;
+  Screen::start();
+}
