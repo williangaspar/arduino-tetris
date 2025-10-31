@@ -11,6 +11,7 @@ extern uint16_t line[4];
 extern uint16_t sqr[4];
 
 int32_t Game::score = 0;
+const uint16_t Screen::colors[6];
 
 Shape Game::shapes[SHAPE_LIST_SIZE] = {
     Shape(l, 3),
@@ -23,11 +24,12 @@ Shape Game::shapes[SHAPE_LIST_SIZE] = {
 Shape* Game::getRandomShape() {
   Shape* shape = &shapes[random(SHAPE_LIST_SIZE)];
   shape->setRotationIndex(random(4));
-  shape->color = (random(SHAPE_LIST_SIZE));
+  shape->color = Screen::colors[random(SHAPE_LIST_SIZE)];
   return shape;
 }
 
 void Game::start() {
   Game::score = 0;
   Screen::start();
+  Screen::setCursor(20, 20);
 }

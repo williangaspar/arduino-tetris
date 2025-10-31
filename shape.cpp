@@ -4,6 +4,8 @@
 
 #include "screen.h"
 
+#define SQR
+
 void Shape::rotate() {
   this->setRotationIndex(this->rotationIndex + 1);
 }
@@ -15,23 +17,31 @@ void Shape::setRotationIndex(int8_t index) {
 
 // TODO: check bounds
 void Shape::moveLeft() {
-  this->x -= SQUARE_LENGHT;
+  this->x -= SQR_SIZE + SQR_GAP;
 }
 
 void Shape::moveRight() {
-  this->x += SQUARE_LENGHT;
+  this->x += SQR_SIZE + SQR_GAP;
 }
 
 void Shape::moveDown() {
-  this->y -= 2 * SQUARE_LENGHT;
+  this->y -= 2 * SQR_SIZE + SQR_GAP;
 }
 
 void Shape::draw() {
   auto currentShape = this->shape[this->rotationIndex];
 
-  for (int i = 15; i >= 0; i--) {
-    Screen::drawSquare(this->x, this->y, 255);
+  int16_t x = this->x;
+  int16_t y = this->y;
+
+  int for_size = this->rowSize * this->rowSize;
+
+  for (int i = 0; i < for_size; i++) {
+    if (bitRead(this->shape[this->rotationIndex], i)) {
+      Screen::drawSquare(x, y, SQR_SIZE, this->color);
+    };
+
+    x = this->x + (SQR_SIZE + SQR_GAP) * ((i + 1) % this->rowSize);
+    if (x == this->x) y += (SQR_SIZE + SQR_GAP);
   }
 }
-
-// tft.fillScreen(ST77XX_BLACK);

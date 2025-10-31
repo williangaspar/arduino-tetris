@@ -3,27 +3,14 @@
 
 #include <Arduino.h>
 
-#define SQUARE_LENGHT 50
+#define SQR_SIZE 12
+#define SQR_GAP 2
 
 class Entity {
 public:
   int x;
   int y;
-  virtual void draw() = 0;
-};
-
-template<int W, int H>
-class Blob : public Entity {
-public:
-  constexpr int getWidth() const {
-    return W;
-  }
-  constexpr int getHeight() const {
-    return H;
-  }
-
-private:
-  // int8_t& grid[H][W];
+  void draw() {};
 };
 
 class Shape : public Entity {
@@ -32,7 +19,7 @@ public:
 
   Shape(uint16_t (&shape)[4], int8_t rowSize)
     : shape(shape), rowSize(rowSize){};
-  void draw() override;
+  void draw();
   void rotate();
   void setRotationIndex(int8_t index);
   void moveLeft();
@@ -43,6 +30,17 @@ private:
   uint16_t (&shape)[4];
   int8_t rotationIndex;
   int8_t rowSize;
+};
+
+class Blob : public Entity {
+public:
+  void reset();
+  bool collisionCheck(Shape &shape);
+  void addShape(Shape &shape);
+  int pointsCheck();
+
+private:
+  // int8_t& grid[H][W];
 };
 
 #endif

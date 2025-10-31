@@ -1,5 +1,6 @@
 #include "game.h"
 #include "shape.h"
+#include "screen.h"
 
 
 #define BTN_UP A1
@@ -50,7 +51,13 @@ void readButtons() {
 }
 
 void loop() {
-  readButtons();
+  // readButtons();
+  // Game::tick();
+  // if (Game::isGameOver) {}
+  Screen::setCursor(40, 40);
   shape->draw();
-  delay(50);
+  delay(1000);
+  shape = Game::getRandomShape();
+  Screen::drawBackground(0);
+  
 }

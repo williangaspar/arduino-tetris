@@ -12,6 +12,7 @@ extern int32_t score;
 
 Shape* getRandomShape();
 void start();
+void gameOver();
 
 }  // namespace Game
 
