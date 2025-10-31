@@ -22,9 +22,11 @@ Shape Game::shapes[SHAPE_LIST_SIZE] = {
     Shape(sqr, 4)};
 
 Shape* Game::getRandomShape() {
-  Shape* shape = &shapes[random(SHAPE_LIST_SIZE)];
-  shape->setRotationIndex(random(4));
-  shape->color = Screen::colors[random(SHAPE_LIST_SIZE)];
+  Shape* shape = &shapes[random(0, SHAPE_LIST_SIZE)];
+  shape->setRotationIndex(random(0, 4));
+  shape->color = Screen::colors[random(0, SHAPE_LIST_SIZE)];
+  shape->x = 49;
+  shape->y = 0;
   return shape;
 }
 

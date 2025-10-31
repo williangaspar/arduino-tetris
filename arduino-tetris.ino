@@ -4,13 +4,15 @@
 
 
 #define BTN_UP A1
-#define BTN_DOWN A2
-#define BTN_LEFT A0
-#define BTN_RIGHT A3
+#define BTN_DOWN A3
+#define BTN_LEFT A4
+#define BTN_RIGHT A2
 
 bool isButtonPressed = false;
 
 Shape* shape = nullptr;
+
+int timer =0;
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
@@ -51,13 +53,19 @@ void readButtons() {
 }
 
 void loop() {
-  // readButtons();
-  // Game::tick();
-  // if (Game::isGameOver) {}
-  Screen::setCursor(40, 40);
+  readButtons();
   shape->draw();
-  delay(1000);
-  shape = Game::getRandomShape();
-  Screen::drawBackground(0);
+
+  if (timer + 1 == 20) {
+    shape->moveDown();
+    timer = 0;
+  }
+
+  if (shape->y > 140) {
+    shape = Game::getRandomShape();
+  }
+
+  timer++;
+  delay(50);
   
 }

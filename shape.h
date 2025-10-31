@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define SQR_SIZE 12
+#define SQR_SIZE 10
 #define SQR_GAP 2
 
 class Entity {
