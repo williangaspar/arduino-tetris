@@ -7,7 +7,7 @@ int8_t currentFrame[BLOB_W][BLOB_H];
 int8_t nextFrame[BLOB_W][BLOB_H];
 }
 
-void Screen::resetFrame(int8_t frame[][BLOB_H]) {
+void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
   for (int x = 0; x < BLOB_W; x++) {
     for (int y = 0; y < BLOB_H; y++) {
       frame[x][y] = 0;
@@ -28,20 +28,7 @@ void Screen::setCursor(int16_t x, int16_t y) {
 }
 
 void Screen::addShapeToFrame(Shape *shape) {
-  int posx = shape->x;
-  int posy = shape->y;
-  uint16_t cshape = shape->getShape();
-
-  for (int i = 0; i < shape->squareSize; i++) {
-    posx = shape->x + (i % shape->rowSize);
-    if (posx == shape->x) posy++;
-
-    if (bitRead(cshape, shape->squareSize - i - 1)) {
-      if ((posx >= 0 && posx < BLOB_W) && (posy >= 0 && posy < BLOB_H)) {
-        nextFrame[posx][posy] = shape->color;
-      }
-    }
-  }
+  shape->addShapeToGrid(nextFrame);
 }
 
 void Screen::addBlobToFrame(Blob &blob) {

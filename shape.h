@@ -14,13 +14,13 @@ public:
 
 class Shape : public Entity {
 public:
-  uint8_t color;
+  int8_t color;
   int8_t const rowSize;
   int8_t const squareSize;
 
-  Shape(uint16_t (&shape)[4], int8_t rowSize)
-    : shape(shape), rowSize(rowSize), squareSize(rowSize * rowSize){};
-  
+  Shape(uint16_t (&grid)[4], int8_t rowSize)
+    : grid(grid), rowSize(rowSize), squareSize(rowSize * rowSize){};
+
   void setRotationIndex(int8_t index);
   void rotate();
   void moveLeft();
@@ -28,9 +28,10 @@ public:
   void moveDown();
 
   uint16_t getShape();
+  void addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]);
 
 private:
-  uint16_t (&shape)[4];
+  uint16_t (&grid)[4];
   int8_t rotationIndex;
 };
 

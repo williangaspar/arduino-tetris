@@ -19,7 +19,7 @@ public:
   static void drawFrame();
 
 private:
-  static void resetFrame(int8_t frame[][BLOB_H]);
+  static void resetFrame(int8_t frame[BLOB_W][BLOB_H]);
 };
 
 #endif

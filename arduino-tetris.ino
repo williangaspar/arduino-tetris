@@ -59,10 +59,6 @@ void loop() {
   Screen::addShapeToFrame(shape);
   Screen::drawFrame();
 
-  if (shape->y >= BLOB_H) {
-    shape = Game::getRandomShape();
-  }
-
   delay(50);
   
 }

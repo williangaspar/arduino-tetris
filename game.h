@@ -12,7 +12,7 @@ Shape* getRandomShape();
 Blob& getBlob();
 void start();
 void gameOver();
-void tick(Shape* shape);
+void tick(Shape*& shape);
 
 }  // namespace Game
 

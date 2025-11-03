@@ -44,10 +44,11 @@ void Game::start() {
   blob.reset();
 }
 
-void Game::tick(Shape* shape) {
-  // if (blob.collisionCheck(shape)) {
-  //   blob.addShape(shape);
-  // }
+void Game::tick(Shape*& shape) {
+  if (blob.collisionCheck(shape)) {
+    blob.addShape(shape);
+    shape = Game::getRandomShape();
+  }
 
   // Game::score += blob.pointsCheck();
 
