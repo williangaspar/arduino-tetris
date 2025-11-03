@@ -1,7 +1,7 @@
 #include "game.h"
 #include "shape.h"
 #include "screen.h"
-
+#include "config.h"
 
 #define BTN_UP A1
 #define BTN_DOWN A3
@@ -11,8 +11,7 @@
 bool isButtonPressed = false;
 
 Shape* shape = nullptr;
-
-int timer =0;
+Blob& blob = Game::getBlob();
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
@@ -20,6 +19,7 @@ void setup() {
   pinMode(BTN_LEFT, INPUT_PULLUP);
   pinMode(BTN_RIGHT, INPUT_PULLUP);
 
+  Screen::start();
   Game::start();
   shape = Game::getRandomShape();
 }
@@ -54,18 +54,15 @@ void readButtons() {
 
 void loop() {
   readButtons();
-  shape->draw();
+  Game::tick(shape);
+  Screen::addBlobToFrame(blob);
+  Screen::addShapeToFrame(shape);
+  Screen::drawFrame();
 
-  if (timer + 1 == 20) {
-    shape->moveDown();
-    timer = 0;
-  }
-
-  if (shape->y > 140) {
+  if (shape->y >= BLOB_H) {
     shape = Game::getRandomShape();
   }
 
-  timer++;
   delay(50);
   
 }

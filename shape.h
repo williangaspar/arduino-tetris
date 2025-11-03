@@ -2,45 +2,48 @@
 #define SHAPE_H
 
 #include <Arduino.h>
-
-#define SQR_SIZE 10
-#define SQR_GAP 2
+#include "config.h"
 
 class Entity {
 public:
   int x;
   int y;
-  void draw() {};
+  Entity()
+    : x(0), y(0){};
 };
 
 class Shape : public Entity {
 public:
-  uint16_t color;
+  uint8_t color;
+  int8_t const rowSize;
+  int8_t const squareSize;
 
   Shape(uint16_t (&shape)[4], int8_t rowSize)
-    : shape(shape), rowSize(rowSize){};
-  void draw();
-  void rotate();
+    : shape(shape), rowSize(rowSize), squareSize(rowSize * rowSize){};
+  
   void setRotationIndex(int8_t index);
+  void rotate();
   void moveLeft();
   void moveRight();
   void moveDown();
 
+  uint16_t getShape();
+
 private:
   uint16_t (&shape)[4];
   int8_t rotationIndex;
-  int8_t rowSize;
 };
 
 class Blob : public Entity {
 public:
   void reset();
-  bool collisionCheck(Shape &shape);
-  void addShape(Shape &shape);
+  bool collisionCheck(Shape *shape);
+  void addShape(Shape *shape);
   int pointsCheck();
+  int8_t getValue(int x, int y);
 
 private:
-  // int8_t& grid[H][W];
+  int8_t grid[BLOB_W][BLOB_H];
 };
 
 #endif

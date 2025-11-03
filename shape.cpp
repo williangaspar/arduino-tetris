@@ -2,10 +2,6 @@
 
 #include <Arduino.h>
 
-#include "screen.h"
-
-#define SQR
-
 void Shape::rotate() {
   this->setRotationIndex(this->rotationIndex + 1);
 }
@@ -14,39 +10,49 @@ void Shape::setRotationIndex(int8_t index) {
   this->rotationIndex = index % 4;
 }
 
-
-// TODO: check bounds
 void Shape::moveLeft() {
-  Screen::drawSquare(x, y, (SQR_SIZE + SQR_GAP) * this->rowSize, 0);
-  this->x -= SQR_SIZE + SQR_GAP;
+  int minx = 0;
+  for (int i = 0; i < this->rowSize; i++) {
+    for (int j = 0; j < this->squareSize; j += this->rowSize) {
+      if (bitRead(this->shape[this->rotationIndex], i + j)) {
+        minx =  i;
+        break;
+      }
+    }
+  }
+
+  if (minx > 0) { this->x--; }
 }
 
 void Shape::moveRight() {
-  Screen::drawSquare(x, y, (SQR_SIZE + SQR_GAP) * this->rowSize, 0);
-  this->x += SQR_SIZE + SQR_GAP;
+  this->x++;
 }
 
 void Shape::moveDown() {
-  Screen::drawSquare(x, y, (SQR_SIZE + SQR_GAP) * this->rowSize, 0);
-  this->y += SQR_SIZE + SQR_GAP;
+  this->y++;
 }
 
-void Shape::draw() {
-  auto currentShape = this->shape[this->rotationIndex];
+uint16_t Shape::getShape() {
+  return this->shape[this->rotationIndex];
+}
 
-  int16_t x = this->x;
-  int16_t y = this->y;
-
-  int for_size = this->rowSize * this->rowSize;
-
-  for (int i = 0; i < for_size; i++) {
-    if (bitRead(this->shape[this->rotationIndex], i)) {
-      Screen::drawSquare(x, y, SQR_SIZE, this->color);
-    } else {
-      Screen::drawSquare(x, y, SQR_SIZE, 0);
+void Blob::reset() {
+  for (int x = 0; x < BLOB_W; x++) {
+    for (int y = 0; y < BLOB_H; y++) {
+      this->grid[x][y] = 0;
     }
-
-    x = this->x + (SQR_SIZE + SQR_GAP) * ((i + 1) % this->rowSize);
-    if (x == this->x) y += (SQR_SIZE + SQR_GAP);
   }
+}
+
+
+bool Blob::collisionCheck(Shape *shape) {
+  return false;
+}
+
+void Blob::addShape(Shape *shape) {
+  //
+}
+
+int8_t Blob::getValue(int x, int y) {
+  return this->grid[x][y];
 }

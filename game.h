@@ -3,16 +3,16 @@
 
 #include "shape.h"
 
-#define SHAPE_LIST_SIZE 6
-
 namespace Game {
 
-extern Shape shapes[SHAPE_LIST_SIZE];
+extern Shape shapes[SHAPE_COUNT];
 extern int32_t score;
 
 Shape* getRandomShape();
+Blob& getBlob();
 void start();
 void gameOver();
+void tick(Shape* shape);
 
 }  // namespace Game
 
