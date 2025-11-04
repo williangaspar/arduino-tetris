@@ -11,21 +11,23 @@ void Shape::setRotationIndex(int8_t index) {
 }
 
 void Shape::moveLeft() {
-  int minx = 0;
-  for (int i = 0; i < this->rowSize; i++) {
-    for (int j = 0; j < this->squareSize; j += this->rowSize) {
-      if (bitRead(this->grid[this->rotationIndex], i + j)) {
-        minx = i;
-        break;
-      }
-    }
-  }
+  int minx = this->x;
+  uint16_t shape = this->getShape();
+  uint16_t mask = this->rowSize == 3 ? L_MSK_3X3 : L_MSK_4X4;
+
+  if ((shape & mask) == 0) { minx++; };
 
   if (minx > 0) { this->x--; }
 }
 
 void Shape::moveRight() {
-  this->x++;
+  int maxx = this->x + this->rowSize;
+  uint16_t shape = this->getShape();
+  uint16_t mask = this->rowSize == 3 ? R_MSK_3X3 : R_MSK_4X4;
+
+  if ((shape & mask) == 0) { maxx--; };
+
+  if (maxx < BLOB_W) { this->x++; }
 }
 
 void Shape::moveDown() {

@@ -11,7 +11,6 @@
 bool isButtonPressed = false;
 
 Shape* shape = nullptr;
-Blob& blob = Game::getBlob();
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
@@ -55,7 +54,7 @@ void readButtons() {
 void loop() {
   readButtons();
   Game::tick(shape);
-  Screen::addBlobToFrame(blob);
+  Screen::addBlobToFrame(Game::getBlob());
   Screen::addShapeToFrame(shape);
   Screen::drawFrame();
 

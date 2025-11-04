@@ -40,7 +40,8 @@ public:
   void reset();
   bool collisionCheck(Shape *shape);
   void addShape(Shape *shape);
-  int pointsCheck();
+  int eraseFilledLines();
+  void squashBlob();
   int8_t getValue(int x, int y);
 
 private:
