@@ -22,10 +22,10 @@ public:
     : grid(grid), rowSize(rowSize), squareSize(rowSize * rowSize){};
 
   void setRotationIndex(int8_t index);
-  void rotate();
-  void moveLeft();
-  void moveRight();
-  void moveDown();
+  bool rotate();
+  bool moveLeft();
+  bool moveRight();
+  bool moveDown();
 
   uint16_t getShape();
   void addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]);

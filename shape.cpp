@@ -2,39 +2,53 @@
 
 #include <Arduino.h>
 
-void Shape::rotate() {
-  this->setRotationIndex(this->rotationIndex + 1);
+bool Shape::rotate() {
+  if (this->x >= 0 && (this->x + this->rowSize) <= BLOB_W) {
+    this->setRotationIndex(this->rotationIndex + 1);
+    return true;
+  }
+
+  return false;
 }
 
 void Shape::setRotationIndex(int8_t index) {
   this->rotationIndex = index % 4;
 }
 
-void Shape::moveLeft() {
+bool Shape::moveLeft() {
   int minx = this->x;
   uint16_t shape = this->getShape();
   uint16_t mask = this->rowSize == 3 ? L_MSK_3X3 : L_MSK_4X4;
 
   if ((shape & mask) == 0) { minx++; };
-
-  if (minx > 0) { this->x--; }
+  if (minx > 0) {
+    this->x--;
+    return true;
+  } 
+  
+  return false;
 }
 
-void Shape::moveRight() {
+bool Shape::moveRight() {
   int maxx = this->x + this->rowSize;
   uint16_t shape = this->getShape();
   uint16_t mask = this->rowSize == 3 ? R_MSK_3X3 : R_MSK_4X4;
 
   if ((shape & mask) == 0) { maxx--; };
-
-  if (maxx < BLOB_W) { this->x++; }
+  if (maxx < BLOB_W) {
+    this->x++;
+    return true;
+  } 
+  
+  return false;
 }
 
-void Shape::moveDown() {
+bool Shape::moveDown() {
   this->y++;
+  return true;
 }
 
-uint16_t Shape::getShape() {
+uint16_t Shape::getShape(int8_t grid[BLOB_W][BLOB_H]) {
   return this->grid[this->rotationIndex];
 }
 
@@ -65,6 +79,11 @@ void Blob::reset() {
 
 
 bool Blob::collisionCheck(Shape *shape) {
+  /*
+    from the shape bottom to the top,
+    check if there is some right underneath 
+    in the blob
+  */
   return shape->y >= 9;
 }
 
