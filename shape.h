@@ -15,11 +15,9 @@ public:
 class Shape : public Entity {
 public:
   int8_t color;
-  int8_t const rowSize;
-  int8_t const squareSize;
 
-  Shape(uint16_t (&grid)[4], int8_t rowSize)
-    : grid(grid), rowSize(rowSize), squareSize(rowSize * rowSize){};
+  Shape(uint16_t (&grid)[4])
+    : grid(grid){};
 
   void setRotationIndex(int8_t index);
   bool rotate();

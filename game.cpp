@@ -18,20 +18,20 @@ int moveDownCounter = 0;
 }
 
 Shape Game::shapes[SHAPE_COUNT] = {
-  Shape(l, 3),
-  Shape(j, 3),
-  Shape(t, 3),
-  Shape(z, 3),
-  Shape(line, 4),
-  Shape(sqr, 4)
+  Shape(l),
+  Shape(j),
+  Shape(t),
+  Shape(z),
+  Shape(line),
+  Shape(sqr)
 };
 
 Shape* Game::getRandomShape() {
   Shape* shape = &shapes[random(0, SHAPE_COUNT)];
   shape->setRotationIndex(random(0, 4));
   shape->color = random(1, SHAPE_COUNT + 1);
-  shape->x = 3;
-  shape->y = -shape->rowSize;
+  shape->x = (BLOB_W - ROW_SIZE / 2) / 2;
+  shape->y = -ROW_SIZE;
   return shape;
 }
 
