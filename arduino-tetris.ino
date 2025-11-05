@@ -12,6 +12,8 @@ bool isButtonPressed = false;
 
 Shape* shape = nullptr;
 
+Game::UserInput userInput;
+
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
   pinMode(BTN_DOWN, INPUT_PULLUP);
@@ -20,7 +22,6 @@ void setup() {
 
   Screen::start();
   Game::start();
-  shape = Game::getRandomShape();
 }
 
 void readButtons() {
@@ -30,34 +31,20 @@ void readButtons() {
     return;
   }
 
-  if (digitalRead(BTN_UP) == LOW) {
-    shape->rotate();
-    isButtonPressed = true;
-  };
+  userInput.up = userInput.up || digitalRead(BTN_UP) == LOW;
+  userInput.down = userInput.down || digitalRead(BTN_DOWN) == LOW;
+  userInput.left = userInput.left || digitalRead(BTN_LEFT) == LOW;
+  userInput.right = userInput.right || digitalRead(BTN_RIGHT) == LOW;
 
-  if (digitalRead(BTN_DOWN) == LOW) {
-    shape->moveDown();
-    isButtonPressed = true;
-  };
-
-  if (digitalRead(BTN_LEFT) == LOW) {
-    shape->moveLeft();
-    isButtonPressed = true;
-  }
-
-  if (digitalRead(BTN_RIGHT) == LOW) {
-    shape->moveRight();
-    isButtonPressed = true;
-  }
+  isButtonPressed = userInput.up || userInput.down || userInput.left || userInput.right;
 }
 
 void loop() {
   readButtons();
-  Game::tick(shape);
+  Game::tick(userInput);
   Screen::addBlobToFrame(Game::getBlob());
-  Screen::addShapeToFrame(shape);
+  Screen::addShapeToFrame(Game::getShape());
   Screen::drawFrame();
 
   delay(50);
-  
 }

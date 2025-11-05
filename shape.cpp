@@ -2,53 +2,33 @@
 
 #include <Arduino.h>
 
-bool Shape::rotate() {
-  int upperBound = this->x + ROW_SIZE;
-  uint16_t shape = this->getShape();
-  if ((shape & R_MSK_C1) == 0) { upperBound--; };
-
-  if (this->x >= 0 && upperBound <= BLOB_W) {
-    this->setRotationIndex(this->rotationIndex + 1);
-    return true;
-  }
-
-  return false;
+void Shape::rotate() {
+  this->setRotation(this->rotationIndex + 1);
 }
 
-void Shape::setRotationIndex(int8_t index) {
+void Shape::setRotation(int8_t index) {
   this->rotationIndex = index % 4;
 }
 
-bool Shape::moveLeft() {
+int Shape::getRotation() {
+  return this->rotationIndex;
+}
+
+bool Shape::isCollidingWithLeftWall(int leftWallx) {
   int minx = this->x;
   uint16_t shape = this->getShape();
 
   if ((shape & L_MSK_C1) == 0) { minx++; };
-  if (minx > 0) {
-    this->x--;
-    return true;
-  } 
-  
-  return false;
+  return minx < leftWallx;
 }
 
-bool Shape::moveRight() {
-  int maxx = this->x + ROW_SIZE;
+bool Shape::isCollidingWithRightWall(int rightWallx) {
+  int maxx = this->x + ROW_SIZE + 3;
   uint16_t shape = this->getShape();
 
   if ((shape & R_MSK_C1) == 0) { maxx--; };
   if ((shape & R_MSK_C2) == 0) { maxx--; };
-  if (maxx < BLOB_W) {
-    this->x++;
-    return true;
-  } 
-  
-  return false;
-}
-
-bool Shape::moveDown() {
-  this->y++;
-  return true;
+  return maxx >= (rightWallx - 1);
 }
 
 uint16_t Shape::getShape() {
@@ -81,13 +61,27 @@ void Blob::reset() {
 }
 
 
-bool Blob::collisionCheck(Shape *shape) {
-  /*
-    from the shape bottom to the top,
-    check if there is some right underneath 
-    in the blob
-  */
-  return shape->y >= 9;
+bool Blob::isCollidingWithShape(Shape *shape) {
+  int posx = shape->x;
+  int posy = shape->y + ROW_SIZE;
+  uint16_t cshape = shape->getShape();
+
+  if (shape->y < 0) {
+    return false;
+  }
+
+  for (int i = 0; i < ROW_SQR_SIZE; i++) {
+    posx = shape->x + (ROW_SIZE - 1) - (i % ROW_SIZE);
+    if (posx == shape->x) posy--;
+
+    if (bitRead(cshape, i)) {
+      if (this->grid[posx][posy + 1] > 0 || posy + 1 >= BLOB_H) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 void Blob::addShape(Shape *shape) {

@@ -19,12 +19,11 @@ public:
   Shape(uint16_t (&grid)[4])
     : grid(grid){};
 
-  void setRotationIndex(int8_t index);
-  bool rotate();
-  bool moveLeft();
-  bool moveRight();
-  bool moveDown();
-
+  void setRotation(int8_t index);
+  int getRotation();
+  void rotate();
+  bool isCollidingWithLeftWall(int leftWallx);
+  bool isCollidingWithRightWall(int rightWallx);
   uint16_t getShape();
   void addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]);
 
@@ -36,7 +35,7 @@ private:
 class Blob : public Entity {
 public:
   void reset();
-  bool collisionCheck(Shape *shape);
+  bool isCollidingWithShape(Shape *shape);
   void addShape(Shape *shape);
   int eraseFilledLines();
   void squashBlob();

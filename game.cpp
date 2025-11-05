@@ -9,15 +9,13 @@ extern uint16_t t[4];
 extern uint16_t line[4];
 extern uint16_t sqr[4];
 
-int32_t Game::score = 0;
-
-
 namespace {
 Blob blob;
+Shape* shape = nullptr;
 int moveDownCounter = 0;
-}
+int32_t score = 0;
 
-Shape Game::shapes[SHAPE_COUNT] = {
+Shape shapes[SHAPE_COUNT] = {
   Shape(l),
   Shape(j),
   Shape(t),
@@ -26,35 +24,76 @@ Shape Game::shapes[SHAPE_COUNT] = {
   Shape(sqr)
 };
 
-Shape* Game::getRandomShape() {
+}
+
+Shape* getRandomShape() {
   Shape* shape = &shapes[random(0, SHAPE_COUNT)];
-  shape->setRotationIndex(random(0, 4));
+  shape->setRotation(random(0, 4));
   shape->color = random(1, SHAPE_COUNT + 1);
   shape->x = (BLOB_W - ROW_SIZE / 2) / 2;
   shape->y = -ROW_SIZE;
   return shape;
 }
 
+void Game::UserInput::reset() {
+  this->left = false;
+  this->right = false;
+  this->up = false;
+  this->down = false;
+}
+
 Blob& Game::getBlob() {
   return blob;
 }
 
-void Game::start() {
-  Game::score = 0;
-  blob.reset();
+Shape* Game::getShape() {
+  return shape;
 }
 
-void Game::tick(Shape*& shape) {
-  if (blob.collisionCheck(shape)) {
-    blob.addShape(shape);
-    shape = Game::getRandomShape();
+void Game::start() {
+  score = 0;
+  blob.reset();
+  shape = getRandomShape();
+}
+
+void Game::tick(Game::UserInput& userInput) {
+  if (userInput.left) {
+    shape->x--;
+    if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0)) {
+      shape->x++;
+    }
+  } else if (userInput.right) {
+    shape->x++;
+    if (blob.isCollidingWithShape(shape) || shape->isCollidingWithRightWall(BLOB_H)) {
+      shape->x--;
+    }
+  } else if (userInput.up) {
+    int oldRotation = shape->getRotation();
+
+    shape->rotate();
+
+    if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0) || shape->isCollidingWithRightWall(BLOB_H)) {
+      shape->setRotation(oldRotation);
+    }
+  } else if (userInput.down) {
+    shape->y++;
+    if (blob.isCollidingWithShape(shape)) {
+      blob.addShape(shape);
+    }
   }
 
-  // Game::score += blob.pointsCheck();
+  userInput.reset();
 
-  moveDownCounter++;
-  if (moveDownCounter + 1 == 10) {
-    shape->moveDown();
+  if (moveDownCounter == 10) {
+    shape->y++;
+
+    if (blob.isCollidingWithShape(shape)) {
+      blob.addShape(shape);
+      shape = getRandomShape();
+    } 
+
     moveDownCounter = 0;
   }
+
+  moveDownCounter++;
 }

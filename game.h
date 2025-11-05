@@ -5,14 +5,21 @@
 
 namespace Game {
 
-extern Shape shapes[SHAPE_COUNT];
-extern int32_t score;
+struct UserInput {
+  bool left;
+  bool right;
+  bool up;
+  bool down;
 
-Shape* getRandomShape();
+  void reset();
+};
+
 Blob& getBlob();
+Shape *getShape();
 void start();
 void gameOver();
-void tick(Shape*& shape);
+void tick(UserInput &userInput);
+int32_t getGameScore();
 
 }  // namespace Game
 
