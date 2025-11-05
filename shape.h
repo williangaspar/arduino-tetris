@@ -42,6 +42,7 @@ public:
   int8_t getValue(int x, int y);
 
 private:
+  void pushLineDown(int idx);
   int8_t grid[BLOB_W][BLOB_H];
 };
 

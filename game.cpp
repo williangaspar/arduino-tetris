@@ -56,7 +56,7 @@ void Game::start() {
   shape = getRandomShape();
 }
 
-void Game::tick(Game::UserInput& userInput) {
+void Game::tick(Game::UserInput& userInput, void (*pointsCallback)()) {
   if (userInput.left) {
     shape->x--;
     if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0)) {
@@ -79,6 +79,8 @@ void Game::tick(Game::UserInput& userInput) {
     shape->y++;
     if (blob.isCollidingWithShape(shape)) {
       blob.addShape(shape);
+      shape = getRandomShape();
+      blob.eraseFilledLines();
     }
   }
 
@@ -86,11 +88,17 @@ void Game::tick(Game::UserInput& userInput) {
 
   if (moveDownCounter == 10) {
     shape->y++;
-
     if (blob.isCollidingWithShape(shape)) {
+      shape->y--;
       blob.addShape(shape);
       shape = getRandomShape();
-    } 
+      int newPoints = blob.eraseFilledLines();
+
+      if (newPoints) {
+        pointsCallback();
+        blob.squashBlob();
+      }
+    }
 
     moveDownCounter = 0;
   }

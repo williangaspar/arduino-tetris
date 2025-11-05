@@ -20,6 +20,7 @@ void Screen::start() {
   tft.setRotation(2);
   delay(200);
   tft.fillScreen(BG_COLOR);
+  tft.drawRect(BLOB_W * SQR_TSIZE, 3, 28, BLOB_H * SQR_TSIZE, FG_COLOR);
   Screen::resetFrame(nextFrame);
 }
 

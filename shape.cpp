@@ -53,9 +53,9 @@ void Shape::addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]) {
 }
 
 void Blob::reset() {
-  for (int x = 0; x < BLOB_W; x++) {
-    for (int y = 0; y < BLOB_H; y++) {
-      this->grid[x][y] = 0;
+  for (int i = 0; i < BLOB_W; i++) {
+    for (int j = 0; j < BLOB_H; j++) {
+      this->grid[i][j] = 0;
     }
   }
 }
@@ -75,7 +75,7 @@ bool Blob::isCollidingWithShape(Shape *shape) {
     if (posx == shape->x) posy--;
 
     if (bitRead(cshape, i)) {
-      if (this->grid[posx][posy + 1] > 0 || posy + 1 >= BLOB_H) {
+      if (this->grid[posx][posy] > 0 || posy >= BLOB_H) {
         return true;
       }
     }
@@ -90,4 +90,51 @@ void Blob::addShape(Shape *shape) {
 
 int8_t Blob::getValue(int x, int y) {
   return this->grid[x][y];
+}
+
+int Blob::eraseFilledLines() {
+  int totalRemoved = 0;
+  for (int i = 0; i < BLOB_H; i++) {
+    bool shouldRemove = true;
+    for (int j = 0; j < BLOB_W; j++) {
+      if (this->grid[j][i] == 0) {
+        shouldRemove = false;
+        break;
+      };
+    }
+    if (shouldRemove) {
+      for (int j = 0; j < BLOB_W; j++) {
+        this->grid[j][i] = 0;
+      }
+      totalRemoved++;
+    };
+  };
+
+  return totalRemoved;
+}
+
+void Blob::squashBlob() {
+  bool isEmptyLine = true;
+  for (int i = BLOB_H - 1; i > 0; i--) {
+    isEmptyLine = true;
+    for (int j = 0; j < BLOB_W; j++) {
+      if (this->grid[j][i] != 0) {
+        isEmptyLine = false;
+        break;
+      }
+    };
+
+    if (isEmptyLine) {
+      this->pushLineDown(i);
+      isEmptyLine = false;
+    }
+  }
+}
+
+void Blob::pushLineDown(int idx) {
+  for (int i = idx; i > 0; i--) {
+    for (int j = 0; j < BLOB_W; j++) {
+      this->grid[j][i] = this->grid[j][i - 1];
+    }
+  }
 }
