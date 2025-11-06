@@ -53,6 +53,7 @@ Shape* Game::getShape() {
 void Game::start() {
   score = 0;
   blob.reset();
+  blob.x = 1;
   shape = getRandomShape();
 }
 

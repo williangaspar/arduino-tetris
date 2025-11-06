@@ -20,7 +20,7 @@ void Screen::start() {
   tft.setRotation(2);
   delay(200);
   tft.fillScreen(BG_COLOR);
-  tft.drawRect(BLOB_W * SQR_TSIZE, 3, 28, BLOB_H * SQR_TSIZE, FG_COLOR);
+  tft.drawRect(BLOB_W * SQR_TSIZE + 3, 3, 28, BLOB_H * SQR_TSIZE, FG_COLOR);
   Screen::resetFrame(nextFrame);
 }
 
@@ -44,7 +44,7 @@ void Screen::drawFrame() {
   for (int i = 0; i < BLOB_W; i++) {
     for (int j = 0; j < BLOB_H; j++) {
       if (currentFrame[i][j] != nextFrame[i][j]) {
-        tft.fillRect(i * SQR_TSIZE, j * SQR_TSIZE, SQR_SIZE, SQR_SIZE, colors[nextFrame[i][j]]);
+        tft.fillRect(i * SQR_TSIZE + 3, j * SQR_TSIZE + 6, SQR_SIZE, SQR_SIZE, colors[nextFrame[i][j]]);
         currentFrame[i][j] = nextFrame[i][j];
       }
     }

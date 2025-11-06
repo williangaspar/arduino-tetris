@@ -44,6 +44,8 @@ public:
 private:
   void pushLineDown(int idx);
   int8_t grid[BLOB_W][BLOB_H];
+  int emptyLines[4] = {0};
+  int emptyLineIdx = 0;
 };
 
 #endif

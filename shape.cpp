@@ -63,7 +63,7 @@ void Blob::reset() {
 
 bool Blob::isCollidingWithShape(Shape *shape) {
   int posx = shape->x;
-  int posy = shape->y + ROW_SIZE;
+  int posy = shape->y;
   uint16_t cshape = shape->getShape();
 
   if (shape->y < 0) {
@@ -71,10 +71,13 @@ bool Blob::isCollidingWithShape(Shape *shape) {
   }
 
   for (int i = 0; i < ROW_SQR_SIZE; i++) {
-    posx = shape->x + (ROW_SIZE - 1) - (i % ROW_SIZE);
-    if (posx == shape->x) posy--;
+    posx = shape->x + (i % ROW_SIZE);
+    if (posx == shape->x) posy++;
 
-    if (bitRead(cshape, i)) {
+    if (bitRead(cshape, ROW_SQR_SIZE - i - 1)) {
+      // This should catch any overlap: top, bottom, left or right.
+      // If the shape is touching the blob, this should trigger.
+      // When that happens, the caller should undo the last move.
       if (this->grid[posx][posy] > 0 || posy >= BLOB_H) {
         return true;
       }
@@ -106,6 +109,7 @@ int Blob::eraseFilledLines() {
       for (int j = 0; j < BLOB_W; j++) {
         this->grid[j][i] = 0;
       }
+      this->emptyLines[this->emptyLineIdx++] = i;
       totalRemoved++;
     };
   };
@@ -114,21 +118,13 @@ int Blob::eraseFilledLines() {
 }
 
 void Blob::squashBlob() {
-  bool isEmptyLine = true;
-  for (int i = BLOB_H - 1; i > 0; i--) {
-    isEmptyLine = true;
-    for (int j = 0; j < BLOB_W; j++) {
-      if (this->grid[j][i] != 0) {
-        isEmptyLine = false;
-        break;
-      }
-    };
-
-    if (isEmptyLine) {
-      this->pushLineDown(i);
-      isEmptyLine = false;
+  for (int i = 0; i < ROW_SIZE; i++) {
+    if (this->emptyLines[i]) {
+      this->pushLineDown(this->emptyLines[i]);
+      this->emptyLines[i] = 0;
     }
   }
+  this->emptyLineIdx = 0;
 }
 
 void Blob::pushLineDown(int idx) {
