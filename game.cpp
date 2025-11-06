@@ -3,6 +3,7 @@
 #include "shape.h"
 
 extern uint16_t z[4];
+extern uint16_t s[4];
 extern uint16_t l[4];
 extern uint16_t j[4];
 extern uint16_t t[4];
@@ -20,6 +21,7 @@ Shape shapes[SHAPE_COUNT] = {
   Shape(j),
   Shape(t),
   Shape(z),
+  Shape(s),
   Shape(line),
   Shape(sqr)
 };
@@ -29,7 +31,7 @@ Shape shapes[SHAPE_COUNT] = {
 Shape* getRandomShape() {
   Shape* shape = &shapes[random(0, SHAPE_COUNT)];
   shape->setRotation(random(0, 4));
-  shape->color = random(1, SHAPE_COUNT + 1);
+  shape->color = random(1, SHAPE_COUNT);
   shape->x = (BLOB_W - ROW_SIZE / 2) / 2;
   shape->y = -ROW_SIZE;
   return shape;

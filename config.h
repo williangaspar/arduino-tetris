@@ -14,7 +14,7 @@
 #define SQR_TSIZE 12
 #define BLOB_W 8
 #define BLOB_H 13
-#define SHAPE_COUNT 6
+#define SHAPE_COUNT 7
 
 #define BG_COLOR ST77XX_BLACK
 #define FG_COLOR ST77XX_WHITE
