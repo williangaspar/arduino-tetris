@@ -59,7 +59,7 @@ void Game::start() {
   shape = getRandomShape();
 }
 
-void Game::tick(Game::UserInput& userInput, void (*pointsCallback)()) {
+void Game::tick(Game::UserInput& userInput, void (*pointsCallback)(int32_t newScore)) {
   if (userInput.left) {
     shape->x--;
     if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0)) {
@@ -72,19 +72,12 @@ void Game::tick(Game::UserInput& userInput, void (*pointsCallback)()) {
     }
   } else if (userInput.up) {
     int oldRotation = shape->getRotation();
-
     shape->rotate();
-
     if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0) || shape->isCollidingWithRightWall(BLOB_H)) {
       shape->setRotation(oldRotation);
     }
   } else if (userInput.down) {
-    shape->y++;
-    if (blob.isCollidingWithShape(shape)) {
-      blob.addShape(shape);
-      shape = getRandomShape();
-      blob.eraseFilledLines();
-    }
+    // join with count down logic
   }
 
   userInput.reset();
@@ -98,7 +91,8 @@ void Game::tick(Game::UserInput& userInput, void (*pointsCallback)()) {
       int newPoints = blob.eraseFilledLines();
 
       if (newPoints) {
-        pointsCallback();
+        score += newPoints * newPoints;
+        pointsCallback(score);
         blob.squashBlob();
       }
     }

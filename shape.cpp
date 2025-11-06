@@ -53,13 +53,8 @@ void Shape::addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]) {
 }
 
 void Blob::reset() {
-  for (int i = 0; i < BLOB_W; i++) {
-    for (int j = 0; j < BLOB_H; j++) {
-      this->grid[i][j] = 0;
-    }
-  }
+ memset(this->grid, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(this->grid[0][0]));
 }
-
 
 bool Blob::isCollidingWithShape(Shape *shape) {
   int posx = shape->x;

@@ -41,8 +41,8 @@ void readButtons() {
 
 void loop() {
   readButtons();
-  Game::tick(userInput, []() {
-    //TODO: play sound
+  Game::tick(userInput, [](int32_t score) {
+    Screen::updateScore(score);
     delay(500);
   });
   Screen::addBlobToFrame(Game::getBlob());

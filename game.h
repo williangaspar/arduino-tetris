@@ -18,7 +18,7 @@ Blob& getBlob();
 Shape *getShape();
 void start();
 void gameOver();
-void tick(UserInput &userInput, void (*pointsCallback)());
+void tick(UserInput &userInput, void (*pointsCallback)(int32_t newScore));
 int32_t getGameScore();
 
 }  // namespace Game

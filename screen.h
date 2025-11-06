@@ -17,6 +17,7 @@ public:
   static void addShapeToFrame(Shape *shape);
   static void addBlobToFrame(Blob &blob);
   static void drawFrame();
+  static void updateScore(int32_t score);
 
 private:
   static void resetFrame(int8_t frame[BLOB_W][BLOB_H]);

@@ -5,14 +5,11 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 int8_t currentFrame[BLOB_W][BLOB_H];
 int8_t nextFrame[BLOB_W][BLOB_H];
+int32_t score = 0;
 }
 
 void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
-  for (int x = 0; x < BLOB_W; x++) {
-    for (int y = 0; y < BLOB_H; y++) {
-      frame[x][y] = 0;
-    }
-  }
+  memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
 }
 
 void Screen::start() {
@@ -21,11 +18,39 @@ void Screen::start() {
   delay(200);
   tft.fillScreen(BG_COLOR);
   tft.drawRect(BLOB_W * SQR_TSIZE + 3, 3, 28, BLOB_H * SQR_TSIZE, FG_COLOR);
+  Screen::updateScore(score);
   Screen::resetFrame(nextFrame);
 }
 
 void Screen::setCursor(int16_t x, int16_t y) {
   tft.setCursor(x, y);
+}
+
+void Screen::updateScore(int32_t newScore) {
+  int x = BLOB_W * SQR_TSIZE + 5;
+  int y = 6;
+  char buffer[5];
+
+  tft.setCursor(x, y);
+  tft.setTextColor(FG_COLOR);
+  tft.setTextSize(1);
+  tft.println("HIGH");
+
+  // Clear old text
+  tft.setCursor(x, y + 12);
+  tft.setTextColor(BG_COLOR);
+  sprintf(buffer, "%04d", score);
+  tft.println(buffer);
+
+  // Draw new text
+  tft.setCursor(x, y + 12);
+  tft.setTextColor(FG_COLOR);
+  sprintf(buffer, "%04d", newScore);
+
+  tft.println(buffer);
+
+  // Update local score
+  score = newScore;
 }
 
 void Screen::addShapeToFrame(Shape *shape) {
@@ -48,5 +73,5 @@ void Screen::drawFrame() {
         currentFrame[i][j] = nextFrame[i][j];
       }
     }
-  }
+  };
 }
