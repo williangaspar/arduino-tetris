@@ -42,8 +42,8 @@ void readButtons() {
 void loop() {
   readButtons();
   Game::tick(userInput, [](int32_t score) {
+    delay(400);
     Screen::updateScore(score);
-    delay(500);
   });
   Screen::addBlobToFrame(Game::getBlob());
   Screen::addShapeToFrame(Game::getShape());

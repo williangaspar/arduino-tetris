@@ -17,7 +17,7 @@ void Screen::start() {
   tft.setRotation(2);
   delay(200);
   tft.fillScreen(BG_COLOR);
-  tft.drawRect(BLOB_W * SQR_TSIZE + 3, 3, 28, BLOB_H * SQR_TSIZE, FG_COLOR);
+  tft.drawFastVLine(BLOB_W * SQR_TSIZE + 3, 3, 160, FG_COLOR);
   Screen::updateScore(score);
   Screen::resetFrame(nextFrame);
 }
@@ -27,7 +27,7 @@ void Screen::setCursor(int16_t x, int16_t y) {
 }
 
 void Screen::updateScore(int32_t newScore) {
-  int x = BLOB_W * SQR_TSIZE + 5;
+  int x = BLOB_W * SQR_TSIZE + 7;
   int y = 6;
   char buffer[5];
 
