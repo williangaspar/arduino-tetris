@@ -6,7 +6,6 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 int8_t currentFrame[BLOB_W][BLOB_H];
 int8_t nextFrame[BLOB_W][BLOB_H];
 int32_t score = 0;
-Shape *screenShape = nullptr;
 }
 
 void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
@@ -23,17 +22,12 @@ void Screen::start() {
   Screen::resetFrame(nextFrame);
 }
 
-void Screen::setCursor(int16_t x, int16_t y) {
-  tft.setCursor(x, y);
+void Screen::reset() {
+  tft.fillScreen(BG_COLOR);
+  tft.drawFastVLine(BLOB_W * SQR_TSIZE + SM_PAD, SM_PAD, SCR_HEIGHT, FG_COLOR);
 }
 
 void Screen::updateNextShape(Shape *nextShape) {
-
-  if (nextShape == screenShape) {
-    return;
-  };
-
-  screenShape = nextShape;
 
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
   int y = MD_PAD;
@@ -109,4 +103,23 @@ void Screen::drawFrame() {
       }
     }
   };
+}
+
+void Screen::gameover() {
+  int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
+  int y = SCR_HEIGHT / 2 - (TXT_HEIGHT * 6 / 2);
+  tft.setTextSize(3);
+
+  tft.setCursor(x, y);
+  tft.setTextColor(BG_COLOR);
+  tft.println("GAME");
+  tft.setCursor(x, tft.getCursorY());
+  tft.println("OVER");
+  x += 3;
+  y += 3;
+  tft.setCursor(x, y);
+  tft.setTextColor(FG_COLOR);
+  tft.println("GAME");
+  tft.setCursor(x, tft.getCursorY());
+  tft.println("OVER");
 }

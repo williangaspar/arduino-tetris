@@ -27,7 +27,7 @@ bool Shape::isCollidingWithLeftWall(int leftWallx) {
 }
 
 bool Shape::isCollidingWithRightWall(int rightWallx) {
-  int maxx = this->x + ROW_SIZE + 3;
+  int maxx = this->x + 2;
   uint16_t shape = this->getShape();
 
   if ((shape & R_MSK_C1) == 0) { maxx--; };

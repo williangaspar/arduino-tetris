@@ -10,10 +10,6 @@
 
 bool isButtonPressed = false;
 
-Shape* shape = nullptr;
-
-Game::UserInput userInput;
-
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
   pinMode(BTN_DOWN, INPUT_PULLUP);
@@ -25,32 +21,57 @@ void setup() {
   Screen::updateNextShape(Game::getNextShape());
 }
 
-void readButtons() {
+Game::Input readButtons() {
+  Game::Input input = Game::Input::None;
+
   // Debouce the buttons
   if (isButtonPressed) {
     isButtonPressed = false;
-    return;
-  }
+    return input;
+  };
 
-  userInput.up = userInput.up || digitalRead(BTN_UP) == LOW;
-  userInput.down = userInput.down || digitalRead(BTN_DOWN) == LOW;
-  userInput.left = userInput.left || digitalRead(BTN_LEFT) == LOW;
-  userInput.right = userInput.right || digitalRead(BTN_RIGHT) == LOW;
+  if (digitalRead(BTN_UP) == LOW) input = Game::Input::Up;
+  if (digitalRead(BTN_DOWN) == LOW) input = Game::Input::Down;
+  if (digitalRead(BTN_LEFT) == LOW) input = Game::Input::Left;
+  if (digitalRead(BTN_RIGHT) == LOW) input = Game::Input::Right;
 
-  isButtonPressed = userInput.up || userInput.down || userInput.left || userInput.right;
+  isButtonPressed = input != Game::Input::None;
+
+  return input;
 }
 
 void loop() {
-  readButtons();
-  Game::tick(userInput, [](int32_t score, Shape* nextShape) {
+  Game::Input userInput = readButtons();
+  Game::Events& events = Game::tick(userInput);
+
+  if (events.isGameOver) {
+    Screen::gameover();
+    delay(1000);
+    userInput = Game::Input::None;
+
+    while (userInput == Game::Input::None) {
+      userInput = readButtons();
+      delay(50);
+    };
+
+    Screen::reset();
+    Game::start();
+    Screen::updateNextShape(Game::getNextShape());
+    Screen::updateScore(Game::getScore());
+  };
+
+  if (events.isNewPoints) {
     delay(400);
-    Screen::updateScore(score);
-    Screen::updateNextShape(nextShape);
-  });
+    Screen::updateScore(Game::getScore());
+  };
+
+  if (events.isNewShape) {
+    Screen::updateNextShape(Game::getNextShape());
+  };
+
   Screen::addBlobToFrame(Game::getBlob());
   Screen::addShapeToFrame(Game::getShape());
   Screen::drawFrame();
-  Screen::updateNextShape(Game::getNextShape());
 
   delay(50);
 }

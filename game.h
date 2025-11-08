@@ -5,11 +5,18 @@
 
 namespace Game {
 
-struct UserInput {
-  bool left;
-  bool right;
-  bool up;
-  bool down;
+enum class Input {
+  Up,
+  Down,
+  Left,
+  Right,
+  None
+};
+
+struct Events {
+  bool isNewShape;
+  bool isNewPoints;
+  bool isGameOver;
 
   void reset();
 };
@@ -18,10 +25,11 @@ Blob &getBlob();
 Shape *getShape();
 Shape *getNextShape();
 
+Events &tick(Input &userInput);
+
 void start();
 void gameOver();
-void tick(UserInput &userInput, void (*pointsCallback)(int32_t newScore));
-int32_t getGameScore();
+int32_t getScore();
 
 }  // namespace Game
 
