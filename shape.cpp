@@ -14,6 +14,10 @@ int Shape::getRotation() {
   return this->rotationIndex;
 }
 
+uint16_t Shape::getShape() {
+  return this->grid[this->rotationIndex];
+}
+
 bool Shape::isCollidingWithLeftWall(int leftWallx) {
   int minx = this->x;
   uint16_t shape = this->getShape();
@@ -29,10 +33,6 @@ bool Shape::isCollidingWithRightWall(int rightWallx) {
   if ((shape & R_MSK_C1) == 0) { maxx--; };
   if ((shape & R_MSK_C2) == 0) { maxx--; };
   return maxx >= (rightWallx - 1);
-}
-
-uint16_t Shape::getShape() {
-  return this->grid[this->rotationIndex];
 }
 
 void Shape::addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]) {

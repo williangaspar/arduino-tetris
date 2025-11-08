@@ -13,6 +13,7 @@ extern uint16_t sqr[4];
 namespace {
 Blob blob;
 Shape* shape = nullptr;
+Shape* nextShape = nullptr;
 int moveDownCounter = 0;
 int32_t score = 0;
 
@@ -52,11 +53,16 @@ Shape* Game::getShape() {
   return shape;
 }
 
+Shape* Game::getNextShape() {
+  return nextShape;
+}
+
 void Game::start() {
   score = 0;
   blob.reset();
   blob.x = 1;
   shape = getRandomShape();
+  nextShape = getRandomShape();
 }
 
 void Game::tick(Game::UserInput& userInput, void (*pointsCallback)(int32_t newScore)) {
@@ -87,7 +93,8 @@ void Game::tick(Game::UserInput& userInput, void (*pointsCallback)(int32_t newSc
     if (blob.isCollidingWithShape(shape)) {
       shape->y--;
       blob.addShape(shape);
-      shape = getRandomShape();
+      shape = nextShape;
+      nextShape = getRandomShape();
       int newPoints = blob.eraseFilledLines();
 
       if (newPoints) {

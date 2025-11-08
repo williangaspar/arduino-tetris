@@ -14,8 +14,10 @@ struct UserInput {
   void reset();
 };
 
-Blob& getBlob();
+Blob &getBlob();
 Shape *getShape();
+Shape *getNextShape();
+
 void start();
 void gameOver();
 void tick(UserInput &userInput, void (*pointsCallback)(int32_t newScore));

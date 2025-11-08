@@ -22,6 +22,7 @@ void setup() {
 
   Screen::start();
   Game::start();
+  Screen::updateNextShape(Game::getNextShape());
 }
 
 void readButtons() {
@@ -41,13 +42,15 @@ void readButtons() {
 
 void loop() {
   readButtons();
-  Game::tick(userInput, [](int32_t score) {
+  Game::tick(userInput, [](int32_t score, Shape* nextShape) {
     delay(400);
     Screen::updateScore(score);
+    Screen::updateNextShape(nextShape);
   });
   Screen::addBlobToFrame(Game::getBlob());
   Screen::addShapeToFrame(Game::getShape());
   Screen::drawFrame();
+  Screen::updateNextShape(Game::getNextShape());
 
   delay(50);
 }
