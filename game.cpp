@@ -12,7 +12,7 @@ extern uint16_t sqr[4];
 
 namespace {
 Blob blob;
-Shape* shape = nullptr;
+Shape* currshape = nullptr;
 Shape* nextShape = nullptr;
 int moveDownCounter = 0;
 int32_t score = 0;
@@ -28,10 +28,29 @@ Shape shapes[SHAPE_COUNT] = {
   Shape(sqr)
 };
 
+Shape shapesDuplicate[SHAPE_COUNT] = {
+  Shape(l),
+  Shape(j),
+  Shape(t),
+  Shape(z),
+  Shape(s),
+  Shape(line),
+  Shape(sqr)
+};
+
 }
 
 Shape* getRandomShape() {
-  Shape* shape = &shapes[random(0, SHAPE_COUNT)];
+  int idx = random(0, SHAPE_COUNT);
+    Shape* shape = &shapes[idx];
+
+  /* If the current shape is the same as the next one, a conflict will happen since we are changing all the properties
+    of the shape when getting a new one. 
+    To avoid this, and to  allow the same shape to appear twice at the same time, we mirror the shape list. */
+  if (shape == currshape) {
+    shape = &shapesDuplicate[idx];
+  }
+
   shape->setRotation(random(0, 4));
   shape->color = random(1, SHAPE_COUNT);
   shape->x = (BLOB_W - ROW_SIZE / 2) / 2;
@@ -54,7 +73,7 @@ Blob& Game::getBlob() {
 }
 
 Shape* Game::getShape() {
-  return shape;
+  return currshape;
 }
 
 Shape* Game::getNextShape() {
@@ -66,73 +85,62 @@ void Game::start() {
   moveDownCounter = 0;
   events.reset();
   blob.reset();
-  blob.x = 1;
-  shape = getRandomShape();
+  currshape = getRandomShape();
   nextShape = getRandomShape();
 }
 
-void onMoveDown() {
-  shape->y++;
-  if (blob.isCollidingWithShape(shape)) {
-    shape->y--;
-    blob.addShape(shape);
-
-    if (shape->y <= 0) {
-      events.isGameOver = true;
-    }
-
-    shape = nextShape;
-    nextShape = getRandomShape();
-
-    events.isNewShape = true;
-
-    int newPoints = blob.eraseFilledLines();
-    if (newPoints) {
-      score += newPoints * newPoints;
-      events.isNewPoints = true;
-      blob.squashBlob();
-    }
-  }
-}
-
-
-Game::Events& Game::tick(Game::Input& userInput) {
+/* Here is where the heartbeat of the game happens. After the game start, any changes to the objects on the screen will be
+  dicted by this function. It processes the user input and returns an event object with averything that happened.  */
+Game::Events& Game::tick(Game::Input userInput) {
   events.reset();
 
-  switch (userInput) {
-    case Game::Input::Up:
-      {
-        int oldRotation = shape->getRotation();
-        shape->rotate();
-        if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0) || shape->isCollidingWithRightWall(BLOB_W)) {
-          shape->setRotation(oldRotation);
-        }
-        break;
+  /* Here is how the user input processing works: We try to execute the move. If it hits anything, we role it back */
+  if (userInput == Game::Input::Left) {
+    currshape->x--;
+    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithLeftWall(0)) {
+      currshape->x++;
+    }
+
+  } else if (userInput == Game::Input::Right) {
+    currshape->x++;
+    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithRightWall(BLOB_W)) {
+      currshape->x--;
+    }
+  }
+  if (userInput == Game::Input::Up) {
+    int oldRotation = currshape->getRotation();
+    currshape->rotate();
+    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithLeftWall(0) || currshape->isCollidingWithRightWall(BLOB_W)) {
+      currshape->setRotation(oldRotation);
+    }
+  } else if (userInput == Game::Input::Down || moveDownCounter == MOVE_COUNT_DOWN) {
+    /*Two things can trigger the down moviment: 
+    1. Ther user pressing the down button; 2. The move down counter getting to its limit. 
+    It's good to have both in the same block to avoid double triggering. */
+    currshape->y++;
+    if (blob.isCollidingWithShape(currshape)) {
+      currshape->y--;
+      blob.addShape(currshape);
+
+      if (currshape->y <= 0) {  // We're to close to the sun
+        events.isGameOver = true;
       }
 
-    case Game::Input::Down:
-      onMoveDown();
-      break;
-    case Game::Input::Left:
-      shape->x--;
-      if (blob.isCollidingWithShape(shape) || shape->isCollidingWithLeftWall(0)) {
-        shape->x++;
+      // Every time the down move hits the blob, we get a new shape
+      currshape = nextShape;
+      nextShape = getRandomShape();
+      events.isNewShape = true;
+
+      int newPoints = blob.eraseFilledLines();
+      if (newPoints) {
+        score += newPoints * newPoints;
+        events.isNewPoints = true;
+        blob.squashBlob();
       }
-      break;
-    case Game::Input::Right:
-      shape->x++;
-      if (blob.isCollidingWithShape(shape) || shape->isCollidingWithRightWall(BLOB_W)) {
-        shape->x--;
-      }
-      break;
+    }
   };
 
-
-  if (moveDownCounter == 10) {
-    onMoveDown();
-    moveDownCounter = 0;
-  }
-  moveDownCounter++;
+  moveDownCounter = ++moveDownCounter % (MOVE_COUNT_DOWN + 1);
 
   return events;
 }

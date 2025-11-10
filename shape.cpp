@@ -57,13 +57,15 @@ void Blob::reset() {
 }
 
 bool Blob::isCollidingWithShape(Shape *shape) {
-  int posx = shape->x;
-  int posy = shape->y;
-  uint16_t cshape = shape->getShape();
 
+  // We can deal with negative x, but negative y will break the check.
   if (shape->y < 0) {
     return false;
   }
+
+  int posx = shape->x;
+  int posy = shape->y;
+  uint16_t cshape = shape->getShape();
 
   for (int i = 0; i < ROW_SQR_SIZE; i++) {
     posx = shape->x + (i % ROW_SIZE);

@@ -44,22 +44,6 @@ void loop() {
   Game::Input userInput = readButtons();
   Game::Events& events = Game::tick(userInput);
 
-  if (events.isGameOver) {
-    Screen::gameover();
-    delay(1000);
-    userInput = Game::Input::None;
-
-    while (userInput == Game::Input::None) {
-      userInput = readButtons();
-      delay(50);
-    };
-
-    Screen::reset();
-    Game::start();
-    Screen::updateNextShape(Game::getNextShape());
-    Screen::updateScore(Game::getScore());
-  };
-
   if (events.isNewPoints) {
     delay(400);
     Screen::updateScore(Game::getScore());
@@ -69,9 +53,25 @@ void loop() {
     Screen::updateNextShape(Game::getNextShape());
   };
 
+  if (events.isGameOver) {
+    Screen::gameover();
+    delay(1000);
+    userInput = Game::Input::None;
+
+    while (userInput == Game::Input::None) {
+      userInput = readButtons();
+      delay(TICK_SPEED);
+    };
+
+    Screen::reset();
+    Game::start();
+    Screen::updateNextShape(Game::getNextShape());
+    Screen::updateScore(Game::getScore());
+  };
+
   Screen::addBlobToFrame(Game::getBlob());
   Screen::addShapeToFrame(Game::getShape());
   Screen::drawFrame();
 
-  delay(50);
+  delay(TICK_SPEED);
 }

@@ -25,7 +25,7 @@ Blob &getBlob();
 Shape *getShape();
 Shape *getNextShape();
 
-Events &tick(Input &userInput);
+Events &tick(Input userInput);
 
 void start();
 void gameOver();
