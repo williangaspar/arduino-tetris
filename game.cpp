@@ -46,7 +46,7 @@ Shape* getRandomShape() {
 
   /* If the current shape is the same as the next one, a conflict will happen since we are changing all the properties
     of the shape when getting a new one. 
-    To avoid this, and to  allow the same shape to appear twice at the same time, we mirror the shape list. */
+    To avoid this, and to allow the same shape to appear twice at the same time, we mirror the shape list. */
   if (shape == currshape) {
     shape = &shapesDuplicate[idx];
   }

@@ -105,21 +105,31 @@ void Screen::drawFrame() {
   };
 }
 
-void Screen::gameover() {
+void printBigText(char *msg1, char *msg2) {
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = SCR_HEIGHT / 2 - (TXT_HEIGHT * 6 / 2);
   tft.setTextSize(3);
 
   tft.setCursor(x, y);
   tft.setTextColor(BG_COLOR);
-  tft.println("GAME");
+  tft.println(msg1);
   tft.setCursor(x, tft.getCursorY());
-  tft.println("OVER");
-  x += 3;
-  y += 3;
+  tft.println(msg2);
+  x += 2;
+  y += 2;
   tft.setCursor(x, y);
   tft.setTextColor(FG_COLOR);
-  tft.println("GAME");
+  tft.println(msg1);
   tft.setCursor(x, tft.getCursorY());
-  tft.println("OVER");
+  tft.println(msg2);
+}
+
+void Screen::printGameOver() {
+  printBigText("GAME", "OVER");
+}
+
+void Screen::printPause() {
+  tft.fillScreen(BG_COLOR);
+  printBigText("PAUSED", "");
+  Screen::resetFrame(currentFrame);
 }

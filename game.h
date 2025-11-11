@@ -10,6 +10,7 @@ enum class Input {
   Down,
   Left,
   Right,
+  Pause,
   None
 };
 

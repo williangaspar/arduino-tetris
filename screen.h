@@ -7,7 +7,7 @@
 #include "shape.h"
 
 #define TFT_CS 10
-#define TFT_RST 8
+#define TFT_RST 7
 #define TFT_DC 9
 
 class Screen {
@@ -18,7 +18,8 @@ public:
   static void drawFrame();
   static void updateScore(int32_t score);
   static void updateNextShape(Shape *shape);
-  static void gameover();
+  static void printGameOver();
+  static void printPause();
   static void reset();
 
 private:

@@ -3,10 +3,11 @@
 #include "screen.h"
 #include "config.h"
 
-#define BTN_UP A1
-#define BTN_DOWN A3
-#define BTN_LEFT A4
-#define BTN_RIGHT A2
+#define BTN_UP A2
+#define BTN_DOWN A5
+#define BTN_LEFT A1
+#define BTN_RIGHT A3
+#define BTN_PAUSE A4
 
 bool isButtonPressed = false;
 
@@ -15,6 +16,7 @@ void setup() {
   pinMode(BTN_DOWN, INPUT_PULLUP);
   pinMode(BTN_LEFT, INPUT_PULLUP);
   pinMode(BTN_RIGHT, INPUT_PULLUP);
+  pinMode(BTN_PAUSE, INPUT_PULLUP);
 
   Screen::start();
   Game::start();
@@ -34,6 +36,7 @@ Game::Input readButtons() {
   if (digitalRead(BTN_DOWN) == LOW) input = Game::Input::Down;
   if (digitalRead(BTN_LEFT) == LOW) input = Game::Input::Left;
   if (digitalRead(BTN_RIGHT) == LOW) input = Game::Input::Right;
+  if (digitalRead(BTN_PAUSE) == LOW) input = Game::Input::Pause;
 
   isButtonPressed = input != Game::Input::None;
 
@@ -42,6 +45,25 @@ Game::Input readButtons() {
 
 void loop() {
   Game::Input userInput = readButtons();
+
+  if (userInput == Game::Input::Pause) {
+    userInput = Game::Input::None;
+    Screen::printPause();
+    delay(TICK_SPEED);
+    while (userInput != Game::Input::Pause) {
+      userInput = readButtons();
+      delay(TICK_SPEED);
+    };
+    Screen::reset();
+    Screen::addBlobToFrame(Game::getBlob());
+    Screen::addShapeToFrame(Game::getShape());
+    Screen::updateScore(Game::getScore());
+    Screen::updateNextShape(Game::getNextShape());
+    Screen::drawFrame();
+    delay(1500);
+    return;
+  }
+
   Game::Events& events = Game::tick(userInput);
 
   if (events.isNewPoints) {
@@ -54,7 +76,7 @@ void loop() {
   };
 
   if (events.isGameOver) {
-    Screen::gameover();
+    Screen::printGameOver();
     delay(1000);
     userInput = Game::Input::None;
 
