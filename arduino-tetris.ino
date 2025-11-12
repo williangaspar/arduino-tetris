@@ -8,6 +8,7 @@
 #define BTN_LEFT A1
 #define BTN_RIGHT A3
 #define BTN_PAUSE A4
+#define BUZZER 5
 
 bool isButtonPressed = false;
 
@@ -17,6 +18,7 @@ void setup() {
   pinMode(BTN_LEFT, INPUT_PULLUP);
   pinMode(BTN_RIGHT, INPUT_PULLUP);
   pinMode(BTN_PAUSE, INPUT_PULLUP);
+  pinMode(BUZZER, OUTPUT);
 
   Screen::start();
   Game::start();
@@ -49,11 +51,13 @@ void loop() {
   if (userInput == Game::Input::Pause) {
     userInput = Game::Input::None;
     Screen::printPause();
+    tone(BUZZER, 131, 200);
     delay(TICK_SPEED);
     while (userInput != Game::Input::Pause) {
       userInput = readButtons();
       delay(TICK_SPEED);
     };
+    tone(BUZZER, 262, 200);
     Screen::reset();
     Screen::addBlobToFrame(Game::getBlob());
     Screen::addShapeToFrame(Game::getShape());
@@ -67,16 +71,23 @@ void loop() {
   Game::Events& events = Game::tick(userInput);
 
   if (events.isNewPoints) {
-    delay(400);
+    tone(BUZZER, 440, 100);
+    delay(100);
+    tone(BUZZER, 880, 200);
+    delay(200);
     Screen::updateScore(Game::getScore());
   };
 
   if (events.isNewShape) {
     Screen::updateNextShape(Game::getNextShape());
+    tone(BUZZER, 440, 100);
   };
 
   if (events.isGameOver) {
     Screen::printGameOver();
+    tone(BUZZER, 554, 200);
+    delay(200);
+    tone(BUZZER, 277, 400);
     delay(1000);
     userInput = Game::Input::None;
 
