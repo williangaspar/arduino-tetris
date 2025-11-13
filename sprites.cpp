@@ -1,5 +1,5 @@
 /*
-    This file will hold the binary data of the shapes
+    This file will hold the binary data for the shapes
 */
 
 #include <Arduino.h>
