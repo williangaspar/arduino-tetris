@@ -56,13 +56,7 @@ void Blob::reset() {
   memset(this->grid, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(this->grid[0][0]));
 }
 
-bool Blob::isCollidingWithShape(Shape *shape) {
-
-  // We can deal with negative x, but negative y will break the check.
-  if (shape->y < 0) {
-    return false;
-  }
-
+bool Blob::isCollidingWithShape(Shape* shape) {
   int posx = shape->x;
   int posy = shape->y;
   uint16_t cshape = shape->getShape();
@@ -75,7 +69,7 @@ bool Blob::isCollidingWithShape(Shape *shape) {
       // This should catch any overlap: top, bottom, left or right.
       // If the shape is touching the blob, this should trigger.
       // When that happens, the caller should undo the last move.
-      if (this->grid[posx][posy] > 0 || posy >= BLOB_H) {
+      if (posy >= 0 && this->grid[posx][posy] > 0 || posy >= BLOB_H) {
         return true;
       }
     }
@@ -84,7 +78,7 @@ bool Blob::isCollidingWithShape(Shape *shape) {
   return false;
 }
 
-void Blob::addShape(Shape *shape) {
+void Blob::addShape(Shape* shape) {
   shape->addShapeToGrid(this->grid);
 }
 
