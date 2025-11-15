@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #include "game.h"
 #include "shape.h"
 #include "screen.h"
@@ -11,6 +13,7 @@
 #define BUZZER 5
 
 bool isButtonPressed = false;
+int32_t currentHighScore = 0;
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
@@ -21,7 +24,10 @@ void setup() {
   pinMode(BUZZER, OUTPUT);
 
   Screen::start();
+  EEPROM.get(0, currentHighScore);
+  if (currentHighScore < 0) currentHighScore = 0;
   Game::start();
+  Screen::updateHighScore(currentHighScore);
   Screen::updateNextShape(Game::getNextShape());
 }
 
@@ -62,6 +68,7 @@ void loop() {
     Screen::addBlobToFrame(Game::getBlob());
     Screen::addShapeToFrame(Game::getShape());
     Screen::updateScore(Game::getScore());
+    Screen::updateHighScore(currentHighScore);
     Screen::updateNextShape(Game::getNextShape());
     Screen::drawFrame();
     delay(1500);
@@ -96,10 +103,19 @@ void loop() {
       delay(TICK_SPEED);
     };
 
+    int32_t newScore = Game::getScore();
+
+    if (newScore > currentHighScore) {
+      // congratulations, you have the new high score
+      currentHighScore = newScore;
+      EEPROM.put(0, newScore);
+    }
+
     Screen::reset();
     Game::start();
     Screen::updateNextShape(Game::getNextShape());
     Screen::updateScore(Game::getScore());
+    Screen::updateHighScore(currentHighScore);
   };
 
   Screen::addBlobToFrame(Game::getBlob());
