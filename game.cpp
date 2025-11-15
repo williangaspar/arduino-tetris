@@ -15,7 +15,7 @@ Blob blob;
 Shape* currshape = nullptr;
 Shape* nextShape = nullptr;
 int8_t moveDownCounter = 0;
-int32_t score = 0;
+int score = 0;
 Game::Events events;
 
 Shape shapes[SHAPE_COUNT] = {
@@ -64,7 +64,7 @@ void Game::Events::reset() {
   this->isGameOver = false;
 }
 
-int32_t Game::getScore() {
+int Game::getScore() {
   return score;
 }
 
@@ -108,11 +108,10 @@ void onMoveDown() {
     nextShape = getRandomShape();
     events.isNewShape = true;
 
-    int newPoints = blob.eraseFilledLines();
-    if (newPoints) {
-      score += newPoints * newPoints;
+    int8_t erasedLines = blob.squash();
+    if (erasedLines) {
+      score += erasedLines * erasedLines;
       events.isNewPoints = true;
-      blob.squashBlob();
     }
   }
 }

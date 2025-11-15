@@ -30,7 +30,7 @@ Events &tick(Input userInput);
 
 void start();
 void gameOver();
-int32_t getScore();
+int getScore();
 
 }  // namespace Game
 

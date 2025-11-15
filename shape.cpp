@@ -86,8 +86,8 @@ int8_t Blob::getValue(int8_t x, int8_t y) {
   return this->grid[x][y];
 }
 
-int8_t Blob::eraseFilledLines() {
-  int8_t totalRemoved = 0;
+int8_t Blob::squash() {
+  int8_t totalLinesRemoved = 0;
   for (int8_t i = 0; i < BLOB_H; i++) {
     bool shouldRemove = true;
     for (int8_t j = 0; j < BLOB_W; j++) {
@@ -97,25 +97,13 @@ int8_t Blob::eraseFilledLines() {
       };
     }
     if (shouldRemove) {
-      for (int8_t j = 0; j < BLOB_W; j++) {
-        this->grid[j][i] = 0;
-      }
-      this->emptyLines[this->emptyLineIdx++] = i;
-      totalRemoved++;
+      memset(this->grid[i], 0, (size_t)BLOB_W * sizeof(this->grid[0][0]));
+      this->pushLineDown(i);
+      totalLinesRemoved++;
     };
   };
 
-  return totalRemoved;
-}
-
-void Blob::squashBlob() {
-  for (int8_t i = 0; i < ROW_SIZE; i++) {
-    if (this->emptyLines[i]) {
-      this->pushLineDown(this->emptyLines[i]);
-      this->emptyLines[i] = 0;
-    }
-  }
-  this->emptyLineIdx = 0;
+  return totalLinesRemoved;
 }
 
 void Blob::pushLineDown(int8_t idx) {

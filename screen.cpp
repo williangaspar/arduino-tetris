@@ -5,8 +5,8 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 int8_t currentFrame[BLOB_W][BLOB_H];
 int8_t nextFrame[BLOB_W][BLOB_H];
-int32_t score = 0;
-int32_t highScore = 0;
+int score = 0;
+int highScore = 0;
 }
 
 void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
@@ -79,12 +79,12 @@ void Screen::updateNextShape(Shape *nextShape) {
   }
 }
 
-void Screen::updateScore(int32_t newScore) {
+void Screen::updateScore(int newScore) {
   Screen::printext("SCOR", newScore, score, 0);
   score = newScore;  // Update local score
 }
 
-void Screen::updateHighScore(int32_t newHighScore) {
+void Screen::updateHighScore(int newHighScore) {
   Screen::printext("HIGH", newHighScore, highScore, 1);
   highScore = newHighScore;  // Update local high score
 }
@@ -99,7 +99,7 @@ void Screen::printPause() {
   Screen::resetFrame(currentFrame);
 }
 
-void Screen::printext(char *text, int32_t newNumber, int32_t oldNumber, int offset) {
+void Screen::printext(char *text, int newNumber, int oldNumber, int offset) {
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
   int shapeTextPad =  MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
   int y = shapeTextPad + (offset * TXT_HEIGHT) + (TXT_HEIGHT + SM_PAD) * ++offset;

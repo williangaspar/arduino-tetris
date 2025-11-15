@@ -13,7 +13,7 @@
 #define BUZZER 5
 
 bool isButtonPressed = false;
-int32_t currentHighScore = 0;
+int currentHighScore = 0;
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);

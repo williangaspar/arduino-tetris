@@ -37,15 +37,12 @@ public:
   void reset();
   bool isCollidingWithShape(Shape *shape);
   void addShape(Shape *shape);
-  int8_t eraseFilledLines();
-  void squashBlob();
+  int8_t squash();
   int8_t getValue(int8_t x, int8_t y);
 
 private:
   void pushLineDown(int8_t idx);
   int8_t grid[BLOB_W][BLOB_H];
-  int8_t emptyLines[4] = {0};
-  int8_t emptyLineIdx = 0;
 };
 
 #endif

@@ -16,8 +16,8 @@ public:
   static void addShapeToFrame(Shape *shape);
   static void addBlobToFrame(Blob &blob);
   static void drawFrame();
-  static void updateScore(int32_t score);
-  static void updateHighScore(int32_t newHighScore);
+  static void updateScore(int score);
+  static void updateHighScore(int newHighScore);
   static void updateNextShape(Shape *shape);
   static void printGameOver();
   static void printPause();
@@ -25,7 +25,7 @@ public:
 
 private:
   static void resetFrame(int8_t frame[BLOB_W][BLOB_H]);
-  static void printext(char *text, int32_t newNumber, int32_t oldNumber, int Offset);
+  static void printext(char *text, int newNumber, int oldNumber, int Offset);
   static void printBigText(char *msg1, char *msg2);
 };
 
