@@ -14,7 +14,7 @@ namespace {
 Blob blob;
 Shape* currshape = nullptr;
 Shape* nextShape = nullptr;
-int moveDownCounter = 0;
+int8_t moveDownCounter = 0;
 int32_t score = 0;
 Game::Events events;
 

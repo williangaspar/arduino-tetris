@@ -10,7 +10,7 @@ void Shape::setRotation(int8_t index) {
   this->rotationIndex = index % 4;
 }
 
-int Shape::getRotation() {
+int8_t Shape::getRotation() {
   return this->rotationIndex;
 }
 
@@ -18,16 +18,16 @@ uint16_t Shape::getShape() {
   return this->grid[this->rotationIndex];
 }
 
-bool Shape::isCollidingWithLeftWall(int leftWallx) {
-  int minx = this->x;
+bool Shape::isCollidingWithLeftWall(int8_t leftWallx) {
+  int8_t minx = this->x;
   uint16_t shape = this->getShape();
 
   if ((shape & L_MSK_C1) == 0) { minx++; };
   return minx < leftWallx;
 }
 
-bool Shape::isCollidingWithRightWall(int rightWallx) {
-  int maxx = this->x + 2;
+bool Shape::isCollidingWithRightWall(int8_t rightWallx) {
+  int8_t maxx = this->x + 2;
   uint16_t shape = this->getShape();
 
   if ((shape & R_MSK_C1) == 0) { maxx--; };
@@ -36,11 +36,11 @@ bool Shape::isCollidingWithRightWall(int rightWallx) {
 }
 
 void Shape::addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]) {
-  int posx = this->x;
-  int posy = this->y;
+  int8_t posx = this->x;
+  int8_t posy = this->y;
   uint16_t shape = this->getShape();
 
-  for (int i = 0; i < ROW_SQR_SIZE; i++) {
+  for (int8_t i = 0; i < ROW_SQR_SIZE; i++) {
     posx = this->x + (i % ROW_SIZE);
     if (posx == this->x) posy++;
 
@@ -57,11 +57,11 @@ void Blob::reset() {
 }
 
 bool Blob::isCollidingWithShape(Shape* shape) {
-  int posx = shape->x;
-  int posy = shape->y;
+  int8_t posx = shape->x;
+  int8_t posy = shape->y;
   uint16_t cshape = shape->getShape();
 
-  for (int i = 0; i < ROW_SQR_SIZE; i++) {
+  for (int8_t i = 0; i < ROW_SQR_SIZE; i++) {
     posx = shape->x + (i % ROW_SIZE);
     if (posx == shape->x) posy++;
 
@@ -82,22 +82,22 @@ void Blob::addShape(Shape* shape) {
   shape->addShapeToGrid(this->grid);
 }
 
-int8_t Blob::getValue(int x, int y) {
+int8_t Blob::getValue(int8_t x, int8_t y) {
   return this->grid[x][y];
 }
 
-int Blob::eraseFilledLines() {
-  int totalRemoved = 0;
-  for (int i = 0; i < BLOB_H; i++) {
+int8_t Blob::eraseFilledLines() {
+  int8_t totalRemoved = 0;
+  for (int8_t i = 0; i < BLOB_H; i++) {
     bool shouldRemove = true;
-    for (int j = 0; j < BLOB_W; j++) {
+    for (int8_t j = 0; j < BLOB_W; j++) {
       if (this->grid[j][i] == 0) {
         shouldRemove = false;
         break;
       };
     }
     if (shouldRemove) {
-      for (int j = 0; j < BLOB_W; j++) {
+      for (int8_t j = 0; j < BLOB_W; j++) {
         this->grid[j][i] = 0;
       }
       this->emptyLines[this->emptyLineIdx++] = i;
@@ -109,7 +109,7 @@ int Blob::eraseFilledLines() {
 }
 
 void Blob::squashBlob() {
-  for (int i = 0; i < ROW_SIZE; i++) {
+  for (int8_t i = 0; i < ROW_SIZE; i++) {
     if (this->emptyLines[i]) {
       this->pushLineDown(this->emptyLines[i]);
       this->emptyLines[i] = 0;
@@ -118,9 +118,9 @@ void Blob::squashBlob() {
   this->emptyLineIdx = 0;
 }
 
-void Blob::pushLineDown(int idx) {
-  for (int i = idx; i > 0; i--) {
-    for (int j = 0; j < BLOB_W; j++) {
+void Blob::pushLineDown(int8_t idx) {
+  for (int8_t i = idx; i > 0; i--) {
+    for (int8_t j = 0; j < BLOB_W; j++) {
       this->grid[j][i] = this->grid[j][i - 1];
     }
   }

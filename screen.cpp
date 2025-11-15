@@ -41,8 +41,8 @@ void Screen::addBlobToFrame(Blob &blob) {
 }
 
 void Screen::drawFrame() {
-  for (int i = 0; i < BLOB_W; i++) {
-    for (int j = 0; j < BLOB_H; j++) {
+  for (int8_t i = 0; i < BLOB_W; i++) {
+    for (int8_t j = 0; j < BLOB_H; j++) {
       if (currentFrame[i][j] != nextFrame[i][j]) {
         tft.fillRect(i * SQR_TSIZE + SM_PAD, j * SQR_TSIZE + MD_PAD, SQR_SIZE, SQR_SIZE, colors[nextFrame[i][j]]);
         currentFrame[i][j] = nextFrame[i][j];
@@ -68,7 +68,7 @@ void Screen::updateNextShape(Shape *nextShape) {
   int posy = 0;
   uint16_t cshape = nextShape->getShape();
 
-  for (int i = 0; i < ROW_SQR_SIZE; i++) {
+  for (int8_t i = 0; i < ROW_SQR_SIZE; i++) {
     posx = 0 + (i % ROW_SIZE);
     if (posx == 0) posy++;
     int color = bitRead(cshape, ROW_SQR_SIZE - i - 1) ? nextShape->color : 0;
