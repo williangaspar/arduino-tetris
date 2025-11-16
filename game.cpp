@@ -2,59 +2,26 @@
 
 #include "shape.h"
 
-extern uint16_t z[4];
-extern uint16_t s[4];
-extern uint16_t l[4];
-extern uint16_t j[4];
-extern uint16_t t[4];
-extern uint16_t line[4];
-extern uint16_t sqr[4];
+extern uint16_t shapeList[][4];
 
 namespace {
 Blob blob;
-Shape* currshape = nullptr;
-Shape* nextShape = nullptr;
+Shape currshape(nullptr);
+Shape nextShape(nullptr);
 int8_t moveDownCounter = 0;
 int score = 0;
 Game::Events events;
 
-Shape shapes[SHAPE_COUNT] = {
-  Shape(l),
-  Shape(j),
-  Shape(t),
-  Shape(z),
-  Shape(s),
-  Shape(line),
-  Shape(sqr)
-};
-
-Shape shapesDuplicate[SHAPE_COUNT] = {
-  Shape(l),
-  Shape(j),
-  Shape(t),
-  Shape(z),
-  Shape(s),
-  Shape(line),
-  Shape(sqr)
-};
-
 }  // namespace
 
-Shape* getRandomShape() {
-  int idx = random(0, SHAPE_COUNT);
-  Shape* shape = &shapes[idx];
+void getRandomShape(Shape& shape) {
+  uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
 
-  /* If the current shape is the same as the next one, a conflict will happen since we are changing all the properties
-    of the shape when getting a new one.
-    To avoid this, and to allow the same shape to appear twice at the same time, we mirror the shape list. */
-  if (shape == currshape) {
-    shape = &shapesDuplicate[idx];
-  }
-
-  shape->setRotation(random(0, 4));
-  shape->color = random(1, SHAPE_COUNT);
-  shape->x = (BLOB_W - ROW_SIZE / 2) / 2;
-  shape->y = -ROW_SIZE;
+  shape.replaceGrid(newGrid);
+  shape.setRotation(random(0, 4));
+  shape.color = random(1, SHAPE_COUNT);
+  shape.x = (BLOB_W - ROW_SIZE / 2) / 2;
+  shape.y = -ROW_SIZE;
   return shape;
 }
 
@@ -72,11 +39,11 @@ Blob& Game::getBlob() {
   return blob;
 }
 
-Shape* Game::getShape() {
+Shape& Game::getShape() {
   return currshape;
 }
 
-Shape* Game::getNextShape() {
+Shape& Game::getNextShape() {
   return nextShape;
 }
 
@@ -85,8 +52,8 @@ void Game::start() {
   moveDownCounter = 0;
   events.reset();
   blob.reset();
-  currshape = getRandomShape();
-  nextShape = getRandomShape();
+  getRandomShape(currshape);
+  getRandomShape(nextShape);
 }
 
 void onMoveDown() {
@@ -94,18 +61,18 @@ void onMoveDown() {
     1. Ther user pressing the down button; 2. The move down counter getting to its limit;
     That is why this function was extracted from Game::tick.
     */
-  currshape->y++;
+  currshape.y++;
   if (blob.isCollidingWithShape(currshape)) {
-    currshape->y--;
+    currshape.y--;
     blob.addShape(currshape);
 
-    if (currshape->y <= 0) {  // We're to close to the sun
+    if (currshape.y <= 0) {  // We're to close to the sun
       events.isGameOver = true;
     }
 
     // Every time the down move hits the blob, we get a new shape
-    currshape = nextShape;
-    nextShape = getRandomShape();
+    currshape.copyShape(nextShape);
+    getRandomShape(nextShape);
     events.isNewShape = true;
 
     int8_t erasedLines = blob.squash();
@@ -123,22 +90,22 @@ Game::Events& Game::tick(Game::Input userInput) {
 
   /* Here is how the user input processing works: We try to execute the move. If it hits anything, we role it back */
   if (userInput == Game::Input::Left) {
-    currshape->x--;
-    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithLeftWall(0)) {
-      currshape->x++;
+    currshape.x--;
+    if (blob.isCollidingWithShape(currshape) || currshape.isCollidingWithLeftWall(0)) {
+      currshape.x++;
     }
 
   } else if (userInput == Game::Input::Right) {
-    currshape->x++;
-    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithRightWall(BLOB_W)) {
-      currshape->x--;
+    currshape.x++;
+    if (blob.isCollidingWithShape(currshape) || currshape.isCollidingWithRightWall(BLOB_W)) {
+      currshape.x--;
     }
   }
   if (userInput == Game::Input::Up) {
-    int oldRotation = currshape->getRotation();
-    currshape->rotate();
-    if (blob.isCollidingWithShape(currshape) || currshape->isCollidingWithLeftWall(0) || currshape->isCollidingWithRightWall(BLOB_W)) {
-      currshape->setRotation(oldRotation);
+    int oldRotation = currshape.getRotation();
+    currshape.rotate();
+    if (blob.isCollidingWithShape(currshape) || currshape.isCollidingWithLeftWall(0) || currshape.isCollidingWithRightWall(BLOB_W)) {
+      currshape.setRotation(oldRotation);
     }
   } else if (userInput == Game::Input::Down) {
     onMoveDown();

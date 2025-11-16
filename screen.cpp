@@ -28,8 +28,8 @@ void Screen::reset() {
   tft.drawFastVLine(BLOB_W * SQR_TSIZE + SM_PAD, SM_PAD, SCR_HEIGHT, FG_COLOR);
 }
 
-void Screen::addShapeToFrame(Shape *shape) {
-  shape->addShapeToGrid(nextFrame);
+void Screen::addShapeToFrame(Shape &shape) {
+  shape.addShapeToGrid(nextFrame);
 }
 
 void Screen::addBlobToFrame(Blob &blob) {
@@ -51,7 +51,7 @@ void Screen::drawFrame() {
   };
 }
 
-void Screen::updateNextShape(Shape *nextShape) {
+void Screen::updateNextShape(Shape &nextShape) {
 
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
   int y = MD_PAD;
@@ -66,12 +66,12 @@ void Screen::updateNextShape(Shape *nextShape) {
 
   int posx = 0;
   int posy = 0;
-  uint16_t cshape = nextShape->getShape();
+  uint16_t cshape = nextShape.getShape();
 
   for (int8_t i = 0; i < ROW_SQR_SIZE; i++) {
     posx = 0 + (i % ROW_SIZE);
     if (posx == 0) posy++;
-    int color = bitRead(cshape, ROW_SQR_SIZE - i - 1) ? nextShape->color : 0;
+    int color = bitRead(cshape, ROW_SQR_SIZE - i - 1) ? nextShape.color : 0;
     tft.fillRect(posx * NXT_SQR_TSIZE + x,
                  posy * NXT_SQR_TSIZE + TXT_HEIGHT,
                  NXT_SQR_SIZE, NXT_SQR_SIZE,
@@ -101,7 +101,7 @@ void Screen::printPause() {
 
 void Screen::printext(char *text, int newNumber, int oldNumber, int offset) {
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
-  int shapeTextPad =  MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
+  int shapeTextPad = MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
   int y = shapeTextPad + (offset * TXT_HEIGHT) + (TXT_HEIGHT + SM_PAD) * ++offset;
   char buffer[5];
 

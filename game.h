@@ -23,8 +23,8 @@ struct Events {
 };
 
 Blob &getBlob();
-Shape *getShape();
-Shape *getNextShape();
+Shape &getShape();
+Shape &getNextShape();
 
 Events &tick(Input userInput);
 

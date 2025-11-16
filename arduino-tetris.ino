@@ -103,7 +103,7 @@ void loop() {
       delay(TICK_SPEED);
     };
 
-    int32_t newScore = Game::getScore();
+    int newScore = Game::getScore();
 
     if (newScore > currentHighScore) {
       // congratulations, you have the new high score

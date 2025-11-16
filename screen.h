@@ -13,12 +13,12 @@
 class Screen {
 public:
   static void start();
-  static void addShapeToFrame(Shape *shape);
+  static void addShapeToFrame(Shape &shape);
   static void addBlobToFrame(Blob &blob);
   static void drawFrame();
   static void updateScore(int score);
   static void updateHighScore(int newHighScore);
-  static void updateNextShape(Shape *shape);
+  static void updateNextShape(Shape &shape);
   static void printGameOver();
   static void printPause();
   static void reset();
