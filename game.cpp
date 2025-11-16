@@ -15,7 +15,7 @@ Game::Events events;
 }  // namespace
 
 void getRandomShape(Shape& shape) {
-  uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
+  uint16_t(*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
 
   shape.replaceGrid(newGrid);
   shape.setRotation(random(0, 4));
@@ -56,33 +56,6 @@ void Game::start() {
   getRandomShape(nextShape);
 }
 
-void onMoveDown() {
-  /*Two things can trigger the down moviment:
-    1. Ther user pressing the down button; 2. The move down counter getting to its limit;
-    That is why this function was extracted from Game::tick.
-    */
-  currshape.y++;
-  if (blob.isCollidingWithShape(currshape)) {
-    currshape.y--;
-    blob.addShape(currshape);
-
-    if (currshape.y <= 0) {  // We're to close to the sun
-      events.isGameOver = true;
-    }
-
-    // Every time the down move hits the blob, we get a new shape
-    currshape.copyShape(nextShape);
-    getRandomShape(nextShape);
-    events.isNewShape = true;
-
-    int8_t erasedLines = blob.squash();
-    if (erasedLines) {
-      score += erasedLines * erasedLines;
-      events.isNewPoints = true;
-    }
-  }
-}
-
 /* Here is where the heartbeat of the game happens. After the game start, any changes to the objects on the screen will be
   dicted by this function. It processes the user input and returns an event object with averything that happened.  */
 Game::Events& Game::tick(Game::Input userInput) {
@@ -107,13 +80,35 @@ Game::Events& Game::tick(Game::Input userInput) {
     if (blob.isCollidingWithShape(currshape) || currshape.isCollidingWithLeftWall(0) || currshape.isCollidingWithRightWall(BLOB_W)) {
       currshape.setRotation(oldRotation);
     }
-  } else if (userInput == Game::Input::Down) {
-    onMoveDown();
-  };
+  } else if (userInput == Game::Input::Down || moveDownCounter == MOVE_COUNT_DOWN) {
+    /*Two things can trigger the down moviment:
+    1. Ther user pressing the down button; 2. The move down counter getting to its limit;
+    This "else" condition prevents double triggering of the events. 
+    If double triggering is allowed, the shape will go down faster, but a visual bug 
+    will happen when the shape is about to hit something after 2 ticks. The shape will not visually 
+    hit the blob before an event like game over or points is triggered.
+    */
+    currshape.y++;
+    if (blob.isCollidingWithShape(currshape)) {
+      currshape.y--;
+      blob.addShape(currshape);
 
-  if (moveDownCounter == MOVE_COUNT_DOWN) {
-    onMoveDown();
-  }
+      if (currshape.y <= 0) {  // We're to close to the sun
+        events.isGameOver = true;
+      }
+
+      // Every time the down move hits the blob, we get a new shape
+      currshape.copyShape(nextShape);
+      getRandomShape(nextShape);
+      events.isNewShape = true;
+
+      int8_t erasedLines = blob.squash();
+      if (erasedLines) {
+        score += erasedLines * erasedLines;
+        events.isNewPoints = true;
+      }
+    }
+  };
 
   moveDownCounter = ++moveDownCounter % (MOVE_COUNT_DOWN + 1);
 
