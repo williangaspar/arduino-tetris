@@ -1,8 +1,6 @@
 #include "game.h"
-
 #include "shape.h"
-
-extern uint16_t shapeList[][4];
+#include "sprites.h"
 
 namespace {
 Blob blob;

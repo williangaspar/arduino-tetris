@@ -2,9 +2,12 @@
     This file will hold the binary data for the shapes
 */
 
+#ifndef SPRITES_H
+#define SPRITES_H
+
 #include <Arduino.h>
 
-uint16_t shapeList[][4] = {
+static const uint16_t shapeList[][4] = {
   {
     // L
     0b1000100011000000,
@@ -61,3 +64,5 @@ uint16_t shapeList[][4] = {
     0b0000011001100000,
   },
 };
+
+#endif  // SPRITES_H
