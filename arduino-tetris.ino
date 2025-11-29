@@ -52,6 +52,7 @@ Game::Input readButtons() {
 }
 
 void loop() {
+  unsigned long startTime = millis();
   Game::Input userInput = readButtons();
 
   if (userInput == Game::Input::Pause) {
@@ -122,5 +123,9 @@ void loop() {
   Screen::addShapeToFrame(Game::getShape());
   Screen::drawFrame();
 
-  delay(TICK_SPEED);
+  // This is an attempt to make the frame rate stable
+  unsigned long diffTime = millis() - startTime;
+  if (diffTime < TICK_SPEED) {
+    delay(TICK_SPEED - diffTime );
+  }
 }
