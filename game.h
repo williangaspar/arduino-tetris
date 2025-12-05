@@ -1,9 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "shape.h"
-
-namespace Game {
+#include <Arduino.h>
 
 enum class Input {
   Up,
@@ -22,16 +20,16 @@ struct Events {
   void reset();
 };
 
-Blob &getBlob();
-Shape &getShape();
-Shape &getNextShape();
+class Game {
+public:
+  static void start();
+  static int getScore();
 
-Events &tick(Input userInput);
-
-void start();
-void gameOver();
-int getScore();
-
-}  // namespace Game
+protected:
+  static Events events;
+  // Carefull! we're sharing the same score between all the games. 
+  static int score; // Why? 2KB of RAM, that's why!
+  static int8_t moveCounter;
+};
 
 #endif
