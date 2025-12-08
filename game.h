@@ -29,7 +29,6 @@ Shape &getNextShape();
 Events &tick(Input userInput);
 
 void start();
-void gameOver();
 int getScore();
 
 }  // namespace Game
