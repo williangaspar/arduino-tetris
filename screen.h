@@ -5,6 +5,7 @@
 #include <Adafruit_ST7735.h>
 #include <SPI.h>
 #include "config.h"
+#include "game.h"
 
 #define TFT_CS 10
 #define TFT_RST 7
@@ -19,11 +20,14 @@ public:
   static void updateHighScore(int newHighScore);
   static void updateNextShape(uint16_t nextShape, int8_t color);
   static void printGameOver();
-  static void printPause();
   static void reset();
+  static void printMenuText(GameMenuItem items[GAME_LIST_SIZE + 1]);
+  static void updateMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]);
 
 private:
-  static void printext(char *text, int newNumber, int oldNumber, int Offset);
+  static void printLabelNumber(char *label, int newNumber, int oldNumber, int Offset);
+  static void printText(char *text, int x, int y, uint16_t color);
+  static void printNumber(int number, int x, int y, uint16_t color);
   static void printBigText(char *msg1, char *msg2);
 };
 

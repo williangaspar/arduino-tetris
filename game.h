@@ -20,6 +20,16 @@ struct Events {
   void reset();
 };
 
+struct GameMenuItem {
+  int8_t id;
+  char name[7];
+};
+
+struct GameMenu {
+  int8_t pointingToIndex;
+  int8_t activeGameIndex;
+};
+
 class Game {
 public:
   static void start();
@@ -27,8 +37,8 @@ public:
 
 protected:
   static Events events;
-  // Carefull! we're sharing the same score between all the games. 
-  static int score; // Why? 2KB of RAM, that's why!
+  // Carefull! we're sharing the same score between all the games.
+  static int score;  // Why? 2KB of RAM, that's why!
   static int8_t moveCounter;
 };
 

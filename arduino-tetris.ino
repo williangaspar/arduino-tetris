@@ -11,16 +11,35 @@
 #define BTN_RIGHT A3
 #define BTN_PAUSE A4
 #define BUZZER 5
-
-enum class GameSelect {
-  Tetris,
-  Snakes
-};
+#define SAVE_DATA_ID 2
 
 bool isButtonPressed = false;
 int currentHighScore = 0;
 int8_t frame[BLOB_W][BLOB_H];
-GameSelect gameSelected = GameSelect::Tetris;
+
+// You can change the order, add or remove items. But keep the IDs the same, and avoid duplicated IDs!
+GameMenuItem menuItems[GAME_MENU_ITEM_SIZE] = {
+  { .id = 0, .name = "Tetris" },
+  { .id = 1, .name = "Snakes" },
+  { .id = SAVE_DATA_ID, .name = "Save  " },
+};
+
+GameMenu menu = {
+  .pointingToIndex = 0,
+  .activeGameIndex = 0,
+};
+
+/*
+  Using an id instead of the array index here allows the menu items to be rearrange
+  without breaking the location of stored data.
+*/
+int loadStoredData(int8_t dataId) {
+  int offset = sizeof(int) * dataId;
+  int score = 0;
+  EEPROM.get(offset, score);
+  if (score < 0) score = 0;
+  return score;
+}
 
 void setup() {
   pinMode(BTN_UP, INPUT_PULLUP);
@@ -30,9 +49,19 @@ void setup() {
   pinMode(BTN_PAUSE, INPUT_PULLUP);
   pinMode(BUZZER, OUTPUT);
 
+  int savedGameId = loadStoredData(SAVE_DATA_ID);
+
+  // Start menu
+  for (int i = 0; i < GAME_LIST_SIZE; i++) {
+    if (menuItems[i].id == savedGameId) {
+      menu.activeGameIndex = i;
+      break;
+    };
+    savedGameId = menuItems[0].id;  // ID not found, default to first item on the list
+  }
+
+  currentHighScore = loadStoredData(savedGameId);
   Screen::start(frame);
-  EEPROM.get(0, currentHighScore);
-  if (currentHighScore < 0) currentHighScore = 0;
   Tetris::start();
   Screen::updateHighScore(currentHighScore);
   Screen::updateNextShape(Tetris::getNextShape(), Tetris::getNextColor());
@@ -116,11 +145,31 @@ void loop() {
 
   if (userInput == Input::Pause) {
     userInput = Input::None;
-    Screen::printPause();
+    Screen::printMenuText(menuItems);
+    Screen::updateMenu(menu, menuItems);
     tone(BUZZER, 131, 200);
     delay(TICK_SPEED);
     while (userInput != Input::Pause) {
       userInput = readButtons();
+      if (userInput == Input::Up) {
+        if (menu.pointingToIndex > 0) {
+          menu.pointingToIndex--;
+        }
+        Screen::updateMenu(menu, menuItems);
+        tone(BUZZER, 880, 50);
+        delay(50);
+        tone(BUZZER, 1318, 50);
+      } else if (userInput == Input::Down) {
+        if (menu.pointingToIndex < GAME_MENU_ITEM_SIZE - 1) {
+          menu.pointingToIndex++;
+        }
+        Screen::updateMenu(menu, menuItems);
+        tone(BUZZER, 880, 50);
+        delay(50);
+        tone(BUZZER, 1318, 50);
+      } else if (userInput == Input::Right) {
+        menu.activeGameIndex = menu.pointingToIndex;
+      }
       delay(TICK_SPEED);
     };
     tone(BUZZER, 262, 200);
@@ -134,7 +183,7 @@ void loop() {
     return;
   }
 
-  gameSelected == GameSelect::Tetris ? onTetrisTick(userInput) : onSnakeTick(userInput);
+  onTetrisTick(userInput);
 
   // This is an attempt to make the frame rate stable
   unsigned long diffTime = millis() - startTime;

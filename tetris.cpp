@@ -93,6 +93,5 @@ Events& Tetris::tick(Input userInput) {
   };
 
   Game::moveCounter = ++Game::moveCounter % (MOVE_COUNT_DOWN + 1);
-
   return Game::events;
 }
