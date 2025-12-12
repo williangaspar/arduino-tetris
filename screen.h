@@ -21,8 +21,8 @@ public:
   static void updateNextShape(uint16_t nextShape, int8_t color);
   static void printGameOver();
   static void reset();
-  static void printMenuText(GameMenuItem items[GAME_LIST_SIZE + 1]);
-  static void updateMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]);
+  static void printPause(GameMenuItem items[GAME_LIST_SIZE + 1]);
+  static void printMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]);
 
 private:
   static void printLabelNumber(char *label, int newNumber, int oldNumber, int Offset);

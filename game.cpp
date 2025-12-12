@@ -6,7 +6,7 @@ void Events::reset() {
   this->isGameOver = false;
 }
 
-void Game::start(){
+void Game::start() {
   Game::score = 0;
   Game::moveCounter = 0;
   Game::events.reset();

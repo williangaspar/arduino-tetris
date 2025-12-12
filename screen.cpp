@@ -87,30 +87,25 @@ void Screen::printGameOver() {
   Screen::printText(over, x, tft.getCursorY(), FG_COLOR);
 }
 
-void Screen::printMenuText(GameMenuItem items[GAME_LIST_SIZE + 1]) {
+void Screen::printPause(GameMenuItem items[GAME_LIST_SIZE + 1]) {
   tft.fillScreen(BG_COLOR);
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = TXT_HEIGHT * 2;
   tft.setTextSize(3);
   Screen::printText("Paused", x, y, FG_COLOR);
-
-  y += TXT_HEIGHT + SM_PAD;
-  tft.setTextSize(1);
-  for (int i = 0; i <= GAME_LIST_SIZE; i++) {
-    y += TXT_HEIGHT + SM_PAD;
-    Screen::printText(items[i].name, x + 10, y, FG_COLOR);
-  };
   Screen::resetFrame(currentFrame);
 }
 
-void Screen::updateMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]) {
+void Screen::printMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]) {
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = TXT_HEIGHT * 3 + SM_PAD;
+  tft.setTextSize(1);
 
   for (int i = 0; i <= GAME_LIST_SIZE; i++) {
     y += TXT_HEIGHT + SM_PAD;
-
     uint16_t arrowColor = menu.pointingToIndex == i ? ST7735_BLUE : BG_COLOR;
+    uint16_t textColor = menu.activeGameIndex == i ? ST7735_BLUE : FG_COLOR;
+    Screen::printText(items[i].name, x + 10, y, textColor);
     tft.fillTriangle(x, y, x + 6, y + 3, x, y + 6, arrowColor);
   };
 }

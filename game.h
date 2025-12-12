@@ -1,7 +1,12 @@
+/*
+  The game class determines what a game is and what happens in a game. It's like an stage where things happens.
+*/
+
 #ifndef GAME_H
 #define GAME_H
 
 #include <Arduino.h>
+#include "config.h"
 
 enum class Input {
   Up,
@@ -22,7 +27,7 @@ struct Events {
 
 struct GameMenuItem {
   int8_t id;
-  char name[7];
+  char *name;
 };
 
 struct GameMenu {
@@ -32,14 +37,20 @@ struct GameMenu {
 
 class Game {
 public:
-  static void start();
-  static int getScore();
+  const int8_t id;
+  const char *name;
+  virtual void start();
+  virtual int getScore();
+  virtual void addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) = 0;
+  virtual Events &tick(Input userInput) = 0;  // This is where all the big game logic lives.
+  Game(int8_t id, const char *name)
+    : id(id), name(name){};
 
 protected:
-  static Events events;
+  static Events events;  // Some event won't be used in every game, just ignore them
   // Carefull! we're sharing the same score between all the games.
-  static int score;  // Why? 2KB of RAM, that's why!
-  static int8_t moveCounter;
+  static int score;           // Why? 2KB of RAM, that's why!
+  static int8_t moveCounter;  // I'm assiming all games will use this.
 };
 
 #endif
