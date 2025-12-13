@@ -122,7 +122,7 @@ void Screen::printLabelNumber(char *label, int newNumber, int oldNumber, int off
   Screen::printNumber(oldNumber, x, y + TXT_HEIGHT, BG_COLOR);
 
   // Draw new  number
-  Screen::printNumber(oldNumber, x, y + TXT_HEIGHT, FG_COLOR);
+  Screen::printNumber(newNumber, x, y + TXT_HEIGHT, FG_COLOR);
 }
 
 void Screen::printText(char *text, int x, int y, uint16_t color) {

@@ -3,6 +3,7 @@
 #include "config.h"
 #include "game.h"
 #include "tetris.h"
+#include "snakes.h"
 #include "screen.h"
 
 #define BTN_UP A2
@@ -18,14 +19,15 @@ int currentHighScore = 0;
 int8_t frame[BLOB_W][BLOB_H];
 
 Tetris tetris(0, "Tetris");
-// TODO: Snakes snakes(1, "Snakes")
+Snakes snakes(1, "Snakes");
 
-Game *games[GAME_LIST_SIZE] = { &tetris };
+Game *games[GAME_LIST_SIZE] = { &tetris, &snakes };
 Game *game = &tetris;
 
 // You can change the order, add or remove items. But keep the IDs the same, and avoid duplicated IDs!
 GameMenuItem menuItems[GAME_MENU_ITEM_SIZE] = {
   { .id = tetris.id, .name = tetris.name },
+  { .id = snakes.id, .name = snakes.name },
   { .id = SAVE_GAME_ID, .name = "Save" },
 };
 
@@ -60,7 +62,7 @@ bool setMenuActiveID(int gameId) {
 
 void setCurrentGame(int8_t gameId) {
   for (int i = 0; i < GAME_LIST_SIZE; i++) {
-    if (games[i] == gameId) {
+    if (games[i]->id == gameId) {
       game = games[i];
     };
   };
@@ -160,6 +162,9 @@ void loop() {
     } else {
       setCurrentGame(menuItems[menu.activeGameIndex].id);
       storeData(SAVE_GAME_ID, game->id);
+      currentHighScore = loadStoredData(menuItems[menu.activeGameIndex].id);
+      game->start();
+      Screen::resetFrame(frame);
     }
     tone(BUZZER, 262, 200);
     Screen::reset();

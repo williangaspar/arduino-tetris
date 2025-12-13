@@ -7,7 +7,7 @@ Shape nextShape(nullptr);
 TetrisBlob blob;
 }  // namespace
 
-void getRandomShape(Shape& shape) {
+void Tetris::getRandomShape(Shape& shape) {
   uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
 
   shape.replaceGrid(newGrid);
@@ -21,21 +21,8 @@ void getRandomShape(Shape& shape) {
 void Tetris::start() {
   Game::start();
   blob.reset();
-  getRandomShape(currshape);
-  getRandomShape(nextShape);
-}
-
-uint16_t Tetris::getNextShape() {
-  return nextShape.getShape();
-}
-
-int8_t Tetris::getNextColor() {
-  return nextShape.color;
-}
-
-void Tetris::addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) {
-  blob.addToFrame(frame);
-  currshape.addToFrame(frame);
+  this->getRandomShape(currshape);
+  this->getRandomShape(nextShape);
 }
 
 /* Here is where the heartbeat of the game happens. After the game start, any changes to the objects on the screen will be
@@ -81,7 +68,7 @@ Events& Tetris::tick(Input userInput) {
 
       // Every time the down move hits the blob, we get a new shape
       currshape.copyShape(nextShape);
-      getRandomShape(nextShape);
+      this->getRandomShape(nextShape);
       Game::events.isNewShape = true;
 
       int8_t erasedLines = blob.squash();
@@ -94,4 +81,17 @@ Events& Tetris::tick(Input userInput) {
 
   Game::moveCounter = ++Game::moveCounter % (MOVE_COUNT_DOWN + 1);
   return Game::events;
+}
+
+uint16_t Tetris::getNextShape() {
+  return nextShape.getShape();
+}
+
+int8_t Tetris::getNextColor() {
+  return nextShape.color;
+}
+
+void Tetris::addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) {
+  blob.addToFrame(frame);
+  currshape.addToFrame(frame);
 }

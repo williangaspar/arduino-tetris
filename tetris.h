@@ -14,6 +14,9 @@ public:
   Events& tick(Input userInput) override;
   static uint16_t getNextShape();
   static int8_t getNextColor();
+
+private:
+  void getRandomShape(Shape& shape);
 };
 
 #endif
