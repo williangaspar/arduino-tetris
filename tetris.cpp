@@ -7,17 +7,6 @@ Shape nextShape(nullptr);
 TetrisBlob blob;
 }  // namespace
 
-void Tetris::getRandomShape(Shape& shape) {
-  uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
-
-  shape.replaceGrid(newGrid);
-  shape.setRotation(random(0, 4));
-  shape.color = random(1, SHAPE_COUNT);
-  shape.x = (BLOB_W - ROW_SIZE / 2) / 2;
-  shape.y = -ROW_SIZE;
-  return shape;
-}
-
 void Tetris::start() {
   Game::start();
   blob.reset();
@@ -49,7 +38,7 @@ Events& Tetris::tick(Input userInput) {
     if (blob.isCollidingWithShape(currshape) || currshape.isCollidingWithLeftWall(0) || currshape.isCollidingWithRightWall(BLOB_W)) {
       currshape.setRotation(oldRotation);
     }
-  } else if (userInput == Input::Down || Game::moveCounter == MOVE_COUNT_DOWN) {
+  } else if (userInput == Input::Down || Game::moveCounter >= MOVE_COUNT_DOWN) {
     /*Two things can trigger the down moviment:
     1. Ther user pressing the down button; 2. The move down counter getting to its limit;
     This "else" condition prevents double triggering of the events.
@@ -73,7 +62,7 @@ Events& Tetris::tick(Input userInput) {
 
       int8_t erasedLines = blob.squash();
       if (erasedLines) {
-        score += erasedLines * erasedLines;
+        Game::score += erasedLines * erasedLines;
         Game::events.isNewPoints = true;
       }
     }
@@ -81,6 +70,17 @@ Events& Tetris::tick(Input userInput) {
 
   Game::moveCounter = ++Game::moveCounter % (MOVE_COUNT_DOWN + 1);
   return Game::events;
+}
+
+void Tetris::getRandomShape(Shape& shape) {
+  uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
+
+  shape.replaceGrid(newGrid);
+  shape.setRotation(random(0, 4));
+  shape.color = random(1, SHAPE_COUNT);
+  shape.x = (BLOB_W - ROW_SIZE / 2) / 2;
+  shape.y = -ROW_SIZE;
+  return shape;
 }
 
 uint16_t Tetris::getNextShape() {

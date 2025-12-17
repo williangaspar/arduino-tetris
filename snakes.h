@@ -13,7 +13,7 @@ public:
   Events& tick(Input userInput) override;
 
 private:
-  void setRandomFoodPosition();
+  void getNewFood();
 
 };
 
