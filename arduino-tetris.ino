@@ -206,7 +206,7 @@ void loop() {
     if (newScore > currentHighScore) {
       // congratulations, you have the new high score
       currentHighScore = newScore;
-      EEPROM.put(0, newScore);
+      storeData(game->id, newScore);
     }
 
     while (userInput == Input::None) {  // Just chilling. Waiting for the next game.
