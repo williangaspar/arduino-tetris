@@ -36,7 +36,7 @@ bool Shape::isCollidingWithRightWall(int8_t rightWallx) {
   return maxx >= (rightWallx - 1);
 }
 
-void Shape::addToFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void Shape::addToFrame(GGrid frame) {
   int8_t posx = this->x;
   int8_t posy = this->y;
   uint16_t shape = this->getShape();
@@ -61,7 +61,7 @@ void Shape::copyShape(Shape& shape) {
   memcpy(this, &shape, sizeof(Shape));
 }
 
-void TetrisBlob::addToFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void TetrisBlob::addToFrame(GGrid frame) {
   for (int x = 0; x < BLOB_W; x++) {
     for (int y = 0; y < BLOB_H; y++) {
       frame[x][y] = this->getValue(x, y);

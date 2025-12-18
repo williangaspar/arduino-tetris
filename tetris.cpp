@@ -1,4 +1,5 @@
 #include "tetris.h"
+
 #include "sprites.h"
 
 namespace {
@@ -73,7 +74,7 @@ Events& Tetris::tick(Input userInput) {
 }
 
 void Tetris::getRandomShape(Shape& shape) {
-  uint16_t (*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
+  uint16_t(*newGrid)[4] = &shapeList[random(0, SHAPE_COUNT)];
 
   shape.replaceGrid(newGrid);
   shape.setRotation(random(0, 4));
@@ -91,7 +92,7 @@ int8_t Tetris::getNextColor() {
   return nextShape.color;
 }
 
-void Tetris::addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void Tetris::addEntitiesToFrame(GGrid frame) {
   blob.addToFrame(frame);
   currshape.addToFrame(frame);
 }

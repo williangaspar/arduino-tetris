@@ -9,12 +9,11 @@ public:
   Snakes(int8_t id, const char* name)
     : Game(id, name) {}
   void start() override;
-  void addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) override;
+  void addEntitiesToFrame(GGrid frame) override;
   Events& tick(Input userInput) override;
 
 private:
   void getNewFood();
-
 };
 
 #endif  // SNAKES_H

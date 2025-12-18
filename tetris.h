@@ -10,7 +10,7 @@ public:
     : Game(id, name) {}                // But cpp stupid, so here we are.
 
   void start() override;
-  void addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) override;
+  void addEntitiesToFrame(GGrid frame) override;
   Events& tick(Input userInput) override;
   static uint16_t getNextShape();
   static int8_t getNextColor();

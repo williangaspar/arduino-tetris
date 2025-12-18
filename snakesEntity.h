@@ -6,11 +6,6 @@
 #include "config.h"
 #include "entity.h"
 
-struct Position {
-  int8_t x;
-  int8_t y;
-};
-
 enum class Direction {
   UP,
   DOWN,
@@ -20,20 +15,25 @@ enum class Direction {
 
 class Body : public Blob {
 public:
-  Position begin;
-  Position end;  // We could call this tail, but calling begin a "head" would be confusing.
+  void addToFrame(GGrid frame) override;
+  Body()
+    : array(&Blob::grid[0][0]), tailIdx(0) {}  // Converting the 2D grid into a 1D array. Why? 'cause we gangsta!
+
 private:
-  int8_t (*array)[];
+  int8_t* array;
+  const static int8_t arraySize = BLOB_W * BLOB_H;
+  int8_t tailIdx;
 };
 
 class Snake : public LiveEntity {
 public:
   Direction direction;
-  void eat(LiveEntity &food);
+  Snake()
+    : direction(Direction::RIGHT), LiveEntity(){};
+  void eat(LiveEntity& food);
   bool getIsDigesting();
   void finishDigestion();
-  Snake()
-    : direction(Direction::RIGHT), LiveEntity() {};
+  void addToFrame(GGrid frame) override;
 
 private:
   Body body;
@@ -41,3 +41,5 @@ private:
 };
 
 #endif  // SNAKES_ENTITY_H
+
+// OBS: everybody is gangster until the segfault shows up.

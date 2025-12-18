@@ -2,16 +2,16 @@
 
 namespace {
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-int8_t currentFrame[BLOB_W][BLOB_H];
+GGrid currentFrame;
 int score = 0;
 int highScore = 0;
-}
+}  // namespace
 
-void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void Screen::resetFrame(GGrid frame) {
   memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
 }
 
-void Screen::start(int8_t nextFrame[BLOB_W][BLOB_H]) {
+void Screen::start(GGrid nextFrame) {
   tft.initR(INITR_BLACKTAB);
   tft.setRotation(2);
   tft.fillScreen(BG_COLOR);
@@ -25,7 +25,7 @@ void Screen::reset() {
   tft.drawFastVLine(BLOB_W * SQR_TSIZE + SM_PAD, SM_PAD, SCR_HEIGHT, FG_COLOR);
 }
 
-void Screen::drawFrame(int8_t nextFrame[BLOB_W][BLOB_H]) {
+void Screen::drawFrame(GGrid nextFrame) {
   for (int8_t i = 0; i < BLOB_W; i++) {
     for (int8_t j = 0; j < BLOB_H; j++) {
       if (currentFrame[i][j] != nextFrame[i][j]) {
@@ -76,8 +76,8 @@ void Screen::printGameOver() {
   int y = SCR_HEIGHT / 2 - (TXT_HEIGHT * 6 / 2);
   tft.setTextSize(3);
 
-  char *game = "Game";
-  char *over = "Over";
+  char* game = "Game";
+  char* over = "Over";
 
   Screen::printText(game, x, y, BG_COLOR);
   Screen::printText(over, x, tft.getCursorY(), BG_COLOR);
@@ -110,7 +110,7 @@ void Screen::printMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]) {
   };
 }
 
-void Screen::printLabelNumber(char *label, int newNumber, int oldNumber, int offset) {
+void Screen::printLabelNumber(char* label, int newNumber, int oldNumber, int offset) {
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
   int shapeTextPad = MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
   int y = shapeTextPad + (offset * TXT_HEIGHT) + (TXT_HEIGHT + SM_PAD) * ++offset;
@@ -125,7 +125,7 @@ void Screen::printLabelNumber(char *label, int newNumber, int oldNumber, int off
   Screen::printNumber(newNumber, x, y + TXT_HEIGHT, FG_COLOR);
 }
 
-void Screen::printText(char *text, int x, int y, uint16_t color) {
+void Screen::printText(char* text, int x, int y, uint16_t color) {
   tft.setCursor(x, y);
   tft.setTextColor(color);
   tft.println(text);

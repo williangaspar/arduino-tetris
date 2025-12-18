@@ -37,17 +37,25 @@ Events& Snakes::tick(Input userInput) {
 
   if (Game::moveCounter >= 10) {
     if (snake.direction == Direction::UP) {
-      if (snake.y <= 0) Game::events.isGameOver = true;
-      else snake.y--;
+      if (snake.y <= 0)
+        Game::events.isGameOver = true;
+      else
+        snake.y--;
     } else if (snake.direction == Direction::DOWN) {
-      if (snake.y >= BLOB_H) Game::events.isGameOver = true;
-      else snake.y++;
+      if (snake.y >= BLOB_H)
+        Game::events.isGameOver = true;
+      else
+        snake.y++;
     } else if (snake.direction == Direction::LEFT) {
-      if (snake.x <= 0) Game::events.isGameOver = true;
-      else snake.x--;
+      if (snake.x <= 0)
+        Game::events.isGameOver = true;
+      else
+        snake.x--;
     } else if (snake.direction == Direction::RIGHT) {
-      if (snake.x >= BLOB_W) Game::events.isGameOver = true;  // There is not scape from the blob perimeter!
-      else snake.x++;
+      if (snake.x >= BLOB_W)
+        Game::events.isGameOver = true;  // There is not scape from the blob perimeter!
+      else
+        snake.x++;
     };
 
     if (snake.getIsDigesting()) {
@@ -67,10 +75,10 @@ Events& Snakes::tick(Input userInput) {
   return Game::events;
 };
 
-void Snakes::addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void Snakes::addEntitiesToFrame(GGrid frame) {
   memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
   frame[food.x][food.y] = food.color;
-  frame[snake.x][snake.y] = snake.color;
+  snake.addToFrame(frame);
 };
 
 void Snakes::getNewFood() {

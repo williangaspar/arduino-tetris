@@ -19,7 +19,7 @@ public:
   uint16_t getShape();
   void replaceGrid(uint16_t (*newGrid)[4]);
   void copyShape(Shape& shape);
-  void addToFrame(int8_t frame[BLOB_W][BLOB_H]) override;
+  void addToFrame(GGrid frame) override;
 
 private:
   uint16_t (*grid)[4];
@@ -28,7 +28,7 @@ private:
 
 class TetrisBlob : public Blob {
 public:
-  void addToFrame(int8_t frame[BLOB_W][BLOB_H]) override;
+  void addToFrame(GGrid frame) override;
   bool isCollidingWithShape(Shape& shape);
   void addShape(Shape& shape);
   int8_t squash();

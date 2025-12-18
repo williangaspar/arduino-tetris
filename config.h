@@ -37,12 +37,16 @@
 #define R_MSK_C1 0b0001000100010001
 #define R_MSK_C2 0b0010001000100010
 
+#define HIGH_NIB_MSK 0b11110000  // Nib = Nibble = half-byte = 4bits.
+#define LOW_NIB_MSK 0b00001111
 
 #define SCR_HEIGHT 160
 #define SCR_WIDTH 128
 #define SM_PAD 3
 #define MD_PAD 6
 #define TXT_HEIGHT 12
+
+using GGrid = uint8_t[BLOB_W][BLOB_H];
 
 static const uint16_t colors[] = {
   ST77XX_BLACK, ST77XX_RED, ST77XX_GREEN, ST77XX_BLUE,

@@ -2,9 +2,9 @@
 
 #include "config.h"
 #include "game.h"
-#include "tetris.h"
-#include "snakes.h"
 #include "screen.h"
+#include "snakes.h"
+#include "tetris.h"
 
 #define BTN_UP A2
 #define BTN_DOWN A5
@@ -16,13 +16,13 @@
 
 bool isButtonPressed = false;
 int currentHighScore = 0;
-int8_t frame[BLOB_W][BLOB_H];
+GGrid frame;
 
 Tetris tetris(0, "Tetris");
 Snakes snakes(1, "Snakes");
 
-Game *games[GAME_LIST_SIZE] = { &tetris, &snakes };
-Game *game = &tetris;
+Game* games[GAME_LIST_SIZE] = { &tetris, &snakes };
+Game* game = &tetris;
 
 // You can change the order, add or remove items. But keep the IDs the same, and avoid duplicated IDs!
 GameMenuItem menuItems[GAME_MENU_ITEM_SIZE] = {
@@ -35,7 +35,6 @@ GameMenu menu = {
   .pointingToIndex = 0,
   .activeGameIndex = 0,
 };
-
 
 int loadStoredData(int8_t dataId) {   // dataId can be a gameId, but they are not the same.
   int offset = sizeof(int) * dataId;  // A dataId can be anything, but gameId must be from a game.
@@ -179,7 +178,7 @@ void loop() {
     return;
   }
 
-  Events &events = game->tick(userInput);
+  Events& events = game->tick(userInput);
 
   if (events.isNewPoints) {
     tone(BUZZER, 440, 100);

@@ -6,6 +6,7 @@
 #define GAME_H
 
 #include <Arduino.h>
+
 #include "config.h"
 
 enum class Input {
@@ -27,7 +28,7 @@ struct Events {
 
 struct GameMenuItem {
   int8_t id;
-  char *name;
+  char* name;
 };
 
 struct GameMenu {
@@ -38,12 +39,12 @@ struct GameMenu {
 class Game {
 public:
   const int8_t id;
-  const char *name;
+  const char* name;
   virtual void start();
   virtual int getScore();
-  virtual void addEntitiesToFrame(int8_t frame[BLOB_W][BLOB_H]) = 0;
-  virtual Events &tick(Input userInput) = 0;  // This is where all the big game logic lives.
-  Game(int8_t id, const char *name)
+  virtual void addEntitiesToFrame(GGrid) = 0;
+  virtual Events& tick(Input userInput) = 0;  // This is where all the big game logic lives.
+  Game(int8_t id, const char* name)
     : id(id), name(name){};
 
 protected:
