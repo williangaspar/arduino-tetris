@@ -49,7 +49,7 @@ void Snakes::addEntitiesToFrame(GGrid frame) {
   memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
   frame[food.x][food.y] = food.color;
   snake.addToFrame(frame);
-  int8_t snakeColor = Game::moveCounter % 5 == 0 ? BLACK_IDX : snake.color;
+  int8_t snakeColor = Game::moveCounter % 5 <= 1 ? BLACK_IDX : snake.color;
   frame[snake.x][snake.y] = snakeColor;
 };
 
