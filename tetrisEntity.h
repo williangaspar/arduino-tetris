@@ -1,21 +1,13 @@
-#ifndef SHAPE_H
-#define SHAPE_H
+#ifndef TETRIS_ENTITY_H
+#define TETRIS_ENTITY_H
 
 #include <Arduino.h>
+
 #include "config.h"
+#include "entity.h"
 
-class Entity {
+class Shape : public LiveEntity {
 public:
-  int8_t x;
-  int8_t y;
-  Entity()
-    : x(0), y(0){};
-};
-
-class Shape : public Entity {
-public:
-  int8_t color;
-
   Shape(uint16_t (*grid)[4])
     : grid(grid){};
 
@@ -26,25 +18,24 @@ public:
   bool isCollidingWithRightWall(int8_t rightWallx);
   uint16_t getShape();
   void replaceGrid(uint16_t (*newGrid)[4]);
-  void copyShape(Shape &shape);
-  void addShapeToGrid(int8_t grid[BLOB_W][BLOB_H]);
+  void copyShape(Shape& shape);
+  void addToFrame(GGrid frame) override;
 
 private:
   uint16_t (*grid)[4];
   int8_t rotationIndex;
 };
 
-class Blob {
+class TetrisBlob : public Blob {
 public:
-  void reset();
-  bool isCollidingWithShape(Shape &shape);
-  void addShape(Shape &shape);
+  void addToFrame(GGrid frame) override;
+  bool isCollidingWithShape(Shape& shape);
+  void addShape(Shape& shape);
   int8_t squash();
   int8_t getValue(int8_t x, int8_t y);
 
 private:
   void pushLineDown(int8_t idx);
-  int8_t grid[BLOB_W][BLOB_H];
 };
 
 #endif

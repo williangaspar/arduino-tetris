@@ -2,21 +2,18 @@
 
 namespace {
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-
-int8_t currentFrame[BLOB_W][BLOB_H];
-int8_t nextFrame[BLOB_W][BLOB_H];
+GGrid currentFrame;
 int score = 0;
 int highScore = 0;
-}
+}  // namespace
 
-void Screen::resetFrame(int8_t frame[BLOB_W][BLOB_H]) {
+void Screen::resetFrame(GGrid frame) {
   memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
 }
 
-void Screen::start() {
+void Screen::start(GGrid nextFrame) {
   tft.initR(INITR_BLACKTAB);
   tft.setRotation(2);
-  delay(200);
   tft.fillScreen(BG_COLOR);
   tft.drawFastVLine(BLOB_W * SQR_TSIZE + SM_PAD, SM_PAD, SCR_HEIGHT, FG_COLOR);
   Screen::updateScore(score);
@@ -28,19 +25,7 @@ void Screen::reset() {
   tft.drawFastVLine(BLOB_W * SQR_TSIZE + SM_PAD, SM_PAD, SCR_HEIGHT, FG_COLOR);
 }
 
-void Screen::addShapeToFrame(Shape &shape) {
-  shape.addShapeToGrid(nextFrame);
-}
-
-void Screen::addBlobToFrame(Blob &blob) {
-  for (int x = 0; x < BLOB_W; x++) {
-    for (int y = 0; y < BLOB_H; y++) {
-      nextFrame[x][y] = blob.getValue(x, y);
-    }
-  }
-}
-
-void Screen::drawFrame() {
+void Screen::drawFrame(GGrid nextFrame) {
   for (int8_t i = 0; i < BLOB_W; i++) {
     for (int8_t j = 0; j < BLOB_H; j++) {
       if (currentFrame[i][j] != nextFrame[i][j]) {
@@ -51,8 +36,7 @@ void Screen::drawFrame() {
   };
 }
 
-void Screen::updateNextShape(Shape &nextShape) {
-
+void Screen::updateNextShape(uint16_t nextShape, int8_t color) {
   int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
   int y = MD_PAD;
   char buffer[5];
@@ -66,79 +50,91 @@ void Screen::updateNextShape(Shape &nextShape) {
 
   int posx = 0;
   int posy = 0;
-  uint16_t cshape = nextShape.getShape();
 
   for (int8_t i = 0; i < ROW_SQR_SIZE; i++) {
     posx = 0 + (i % ROW_SIZE);
     if (posx == 0) posy++;
-    int color = bitRead(cshape, ROW_SQR_SIZE - i - 1) ? nextShape.color : 0;
     tft.fillRect(posx * NXT_SQR_TSIZE + x,
                  posy * NXT_SQR_TSIZE + TXT_HEIGHT,
                  NXT_SQR_SIZE, NXT_SQR_SIZE,
-                 colors[color]);
+                 colors[bitRead(nextShape, ROW_SQR_SIZE - i - 1) ? color : 0]);
   }
 }
 
 void Screen::updateScore(int newScore) {
-  Screen::printext("SCOR", newScore, score, 0);
+  Screen::printLabelNumber("SCOR", newScore, score, 0);
   score = newScore;  // Update local score
 }
 
 void Screen::updateHighScore(int newHighScore) {
-  Screen::printext("HIGH", newHighScore, highScore, 1);
+  Screen::printLabelNumber("HIGH", newHighScore, highScore, 1);
   highScore = newHighScore;  // Update local high score
 }
 
 void Screen::printGameOver() {
-  Screen::printBigText("GAME", "OVER");
-}
-
-void Screen::printPause() {
-  tft.fillScreen(BG_COLOR);
-  Screen::printBigText("PAUSED", "");
-  Screen::resetFrame(currentFrame);
-}
-
-void Screen::printext(char *text, int newNumber, int oldNumber, int offset) {
-  int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
-  int shapeTextPad = MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
-  int y = shapeTextPad + (offset * TXT_HEIGHT) + (TXT_HEIGHT + SM_PAD) * ++offset;
-  char buffer[5];
-
-  tft.setCursor(x, y);
-  tft.setTextColor(FG_COLOR);
-  tft.setTextSize(1);
-  tft.println(text);
-
-  // Clear old text
-  tft.setCursor(x, y + TXT_HEIGHT);
-  tft.setTextColor(BG_COLOR);
-  sprintf(buffer, "%04d", oldNumber);
-  tft.println(buffer);
-
-  // Draw new text
-  tft.setCursor(x, y + TXT_HEIGHT);
-  tft.setTextColor(FG_COLOR);
-  sprintf(buffer, "%04d", newNumber);
-
-  tft.println(buffer);
-}
-
-void Screen::printBigText(char *msg1, char *msg2) {
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = SCR_HEIGHT / 2 - (TXT_HEIGHT * 6 / 2);
   tft.setTextSize(3);
 
-  tft.setCursor(x, y);
-  tft.setTextColor(BG_COLOR);
-  tft.println(msg1);
-  tft.setCursor(x, tft.getCursorY());
-  tft.println(msg2);
+  char* game = "Game";
+  char* over = "Over";
+
+  Screen::printText(game, x, y, BG_COLOR);
+  Screen::printText(over, x, tft.getCursorY(), BG_COLOR);
   x += 2;
   y += 2;
+  Screen::printText(game, x, y, FG_COLOR);
+  Screen::printText(over, x, tft.getCursorY(), FG_COLOR);
+}
+
+void Screen::printPause(GameMenuItem items[GAME_LIST_SIZE + 1]) {
+  tft.fillScreen(BG_COLOR);
+  int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
+  int y = TXT_HEIGHT * 2;
+  tft.setTextSize(3);
+  Screen::printText("Paused", x, y, FG_COLOR);
+  Screen::resetFrame(currentFrame);
+}
+
+void Screen::printMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]) {
+  int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
+  int y = TXT_HEIGHT * 3 + SM_PAD;
+  tft.setTextSize(1);
+
+  for (int i = 0; i <= GAME_LIST_SIZE; i++) {
+    y += TXT_HEIGHT + SM_PAD;
+    uint16_t arrowColor = menu.pointingToIndex == i ? ST7735_BLUE : BG_COLOR;
+    uint16_t textColor = menu.activeGameIndex == i ? ST7735_BLUE : FG_COLOR;
+    Screen::printText(items[i].name, x + 10, y, textColor);
+    tft.fillTriangle(x, y, x + 6, y + 3, x, y + 6, arrowColor);
+  };
+}
+
+void Screen::printLabelNumber(char* label, int newNumber, int oldNumber, int offset) {
+  int x = BLOB_W * SQR_TSIZE + MD_PAD + 1;
+  int shapeTextPad = MD_PAD + NXT_SQR_TSIZE * ROW_SIZE;
+  int y = shapeTextPad + (offset * TXT_HEIGHT) + (TXT_HEIGHT + SM_PAD) * ++offset;
+
+  tft.setTextSize(1);
+  Screen::printText(label, x, y, FG_COLOR);
+
+  // Clear old number
+  Screen::printNumber(oldNumber, x, y + TXT_HEIGHT, BG_COLOR);
+
+  // Draw new  number
+  Screen::printNumber(newNumber, x, y + TXT_HEIGHT, FG_COLOR);
+}
+
+void Screen::printText(char* text, int x, int y, uint16_t color) {
   tft.setCursor(x, y);
-  tft.setTextColor(FG_COLOR);
-  tft.println(msg1);
-  tft.setCursor(x, tft.getCursorY());
-  tft.println(msg2);
+  tft.setTextColor(color);
+  tft.println(text);
+}
+
+void Screen::printNumber(int number, int x, int y, uint16_t color) {
+  char buffer[5];
+  tft.setCursor(x, y);
+  tft.setTextColor(color);
+  sprintf(buffer, "%04d", number);
+  tft.println(buffer);
 }
