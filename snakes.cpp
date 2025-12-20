@@ -7,23 +7,13 @@ Snake snake;
 
 void Snakes::start() {
   Game::start();
-  food.color = 1;
-  snake.color = 2;
-  snake.x = 3;
-  snake.y = 3;
-  snake.direction = Direction::RIGHT;
-  snake.finishDigestion();
+  food.color = RED_IDX;
+  snake.reset();
   this->getNewFood();
 };
 
 Events& Snakes::tick(Input userInput) {
   Game::events.reset();
-  /*There are only 4 valid positions for the body start to be: directly above, directly below, to the left or to the right.
-   \/
-  |=|  |=|   >|=|  |=|<
-        /\
-  If the body starts anywhere else something went wrong.
-  */
 
   if (userInput == Input::Up && snake.direction != Direction::DOWN) {
     snake.direction = Direction::UP;
@@ -35,43 +25,23 @@ Events& Snakes::tick(Input userInput) {
     snake.direction = Direction::RIGHT;
   };
 
-  if (Game::moveCounter >= 10) {
-    if (snake.direction == Direction::UP) {
-      if (snake.y <= 0)
-        Game::events.isGameOver = true;
-      else
-        snake.y--;
-    } else if (snake.direction == Direction::DOWN) {
-      if (snake.y >= BLOB_H)
-        Game::events.isGameOver = true;
-      else
-        snake.y++;
-    } else if (snake.direction == Direction::LEFT) {
-      if (snake.x <= 0)
-        Game::events.isGameOver = true;
-      else
-        snake.x--;
-    } else if (snake.direction == Direction::RIGHT) {
-      if (snake.x >= BLOB_W)
-        Game::events.isGameOver = true;  // There is not scape from the blob perimeter!
-      else
-        snake.x++;
-    };
+  if (Game::moveCounter >= 5) {
 
-    if (snake.getIsDigesting()) {
-      snake.finishDigestion();
-      this->getNewFood();
+    if (!snake.move()) {
+      Game::events.isGameOver = true;
     } else {
       if (snake.x == food.x && snake.y == food.y) {
         snake.eat(food);
-        Game::score++;
+        this->getNewFood();
+        Game::score += snake.getSize();
         Game::events.isNewPoints = true;
       };
     }
+
     Game::moveCounter = 0;
   };
 
-  Game::moveCounter = ++Game::moveCounter % (10 + 1);
+  Game::moveCounter = ++Game::moveCounter % (5 + 1);
   return Game::events;
 };
 
@@ -79,6 +49,8 @@ void Snakes::addEntitiesToFrame(GGrid frame) {
   memset(frame, 0, (size_t)BLOB_W * (size_t)BLOB_H * sizeof(frame[0][0]));
   frame[food.x][food.y] = food.color;
   snake.addToFrame(frame);
+  int8_t snakeColor = Game::moveCounter % 5 == 0 ? BLACK_IDX : snake.color;
+  frame[snake.x][snake.y] = snakeColor;
 };
 
 void Snakes::getNewFood() {

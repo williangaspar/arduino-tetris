@@ -14,28 +14,34 @@ enum class Direction {
 };
 
 class Body : public Blob {
-public:
-  void addToFrame(GGrid frame) override;
+ public:
   Body()
-    : array(&Blob::grid[0][0]), tailIdx(0) {}  // Converting the 2D grid into a 1D array. Why? 'cause we gangsta!
+      : array(&Blob::grid[0][0]), size(0) {}  // Converting the 2D grid into a 1D array. Why? 'cause we gangsta!
+  void addToFrame(GGrid frame) override;
+  void reset() override;
+  bool addNewSegment(int8_t x, int8_t y);
+  void move(int8_t x, int8_t y);
+  uint8_t getSize();
 
-private:
-  int8_t* array;
-  const static int8_t arraySize = BLOB_W * BLOB_H;
-  int8_t tailIdx;
+ private:
+  uint8_t* array;
+  static const int arraySize = BLOB_W * BLOB_H;
+  int size;
 };
 
 class Snake : public LiveEntity {
-public:
+ public:
   Direction direction;
   Snake()
-    : direction(Direction::RIGHT), LiveEntity(){};
-  void eat(LiveEntity& food);
+      : direction(Direction::RIGHT), LiveEntity() {};
+  bool move();
+  bool eat(LiveEntity& food);
   bool getIsDigesting();
-  void finishDigestion();
+  void reset();
   void addToFrame(GGrid frame) override;
+  uint8_t getSize();
 
-private:
+ private:
   Body body;
   bool isDigesting;
 };

@@ -184,7 +184,6 @@ void loop() {
     tone(BUZZER, 440, 100);
     delay(100);
     tone(BUZZER, 880, 200);
-    delay(200);
     Screen::updateScore(game->getScore());
   };
 

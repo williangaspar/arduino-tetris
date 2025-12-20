@@ -21,7 +21,7 @@ class LiveEntity : public Entity {
 
 class Blob : public Entity {
  public:
-  void reset();
+  virtual void reset();
 
  protected:
   static GGrid grid;

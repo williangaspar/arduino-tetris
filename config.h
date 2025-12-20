@@ -46,6 +46,10 @@
 #define MD_PAD 6
 #define TXT_HEIGHT 12
 
+#define BLUE_IDX  3
+#define RED_IDX  1
+#define BLACK_IDX 0
+
 using GGrid = uint8_t[BLOB_W][BLOB_H];
 
 static const uint16_t colors[] = {
