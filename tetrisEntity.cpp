@@ -101,17 +101,16 @@ int8_t TetrisBlob::getValue(int8_t x, int8_t y) {
 
 int8_t TetrisBlob::squash() {
   int8_t totalLinesRemoved = 0;
-  for (int8_t i = 0; i < BLOB_H; i++) {
+  for (int8_t hi = 0; hi < BLOB_H; hi++) {
     bool shouldRemove = true;
-    for (int8_t j = 0; j < BLOB_W; j++) {
-      if (Blob::grid[j][i] == 0) {
+    for (int8_t xj = 0; xj < BLOB_W; xj++) {
+      if (Blob::grid[xj][hi] == 0) {
         shouldRemove = false;
         break;
       };
     }
     if (shouldRemove) {
-      memset(Blob::grid[i], 0, (size_t)BLOB_W * sizeof(Blob::grid[0][0]));
-      this->pushLineDown(i);
+      this->pushLineDown(hi);
       totalLinesRemoved++;
     };
   };
@@ -120,9 +119,9 @@ int8_t TetrisBlob::squash() {
 }
 
 void TetrisBlob::pushLineDown(int8_t idx) {
-  for (int8_t i = idx; i > 0; i--) {
-    for (int8_t j = 0; j < BLOB_W; j++) {
-      Blob::grid[j][i] = Blob::grid[j][i - 1];
+  for (int8_t hi = idx; hi > 0; hi--) {
+    for (int8_t xj = 0; xj < BLOB_W; xj++) {
+      Blob::grid[xj][hi] = Blob::grid[xj][hi - 1];
     }
   }
 }
