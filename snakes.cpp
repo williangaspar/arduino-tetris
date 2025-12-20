@@ -25,7 +25,7 @@ Events& Snakes::tick(Input userInput) {
     snake.direction = Direction::RIGHT;
   };
 
-  if (Game::moveCounter >= 5) {
+  if (Game::moveCounter >= MOVE_COUNT) {
 
     if (!snake.move()) {
       Game::events.isGameOver = true;
@@ -41,7 +41,7 @@ Events& Snakes::tick(Input userInput) {
     Game::moveCounter = 0;
   };
 
-  Game::moveCounter = ++Game::moveCounter % (5 + 1);
+  Game::moveCounter = ++Game::moveCounter % (MOVE_COUNT + 1);
   return Game::events;
 };
 

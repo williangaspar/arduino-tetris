@@ -14,6 +14,7 @@
 
 #define TICK_SPEED 50       // In ms.
 #define MOVE_COUNT_DOWN 10  // In ticks.
+#define MOVE_COUNT 5
 
 #define ROW_SIZE 4
 #define ROW_SQR_SIZE 16
