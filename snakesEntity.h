@@ -21,6 +21,7 @@ class Body : public Blob {
   void reset() override;
   bool addNewSegment(int8_t x, int8_t y);
   void move(int8_t x, int8_t y);
+  bool isColidingWith(int8_t x, int8_t y);
   uint8_t getSize();
 
  private:
@@ -40,6 +41,7 @@ class Snake : public LiveEntity {
   void reset();
   void addToFrame(GGrid frame) override;
   uint8_t getSize();
+  bool isColidingWith(int8_t x, int8_t y);
 
  private:
   Body body;

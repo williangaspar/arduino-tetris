@@ -25,7 +25,7 @@ bool Snake::move() {
     this->x++;
   };
 
-  return true;
+  return !this->body.isColidingWith(this->x, this->y);
 }
 
 bool Snake::getIsDigesting() {
@@ -50,6 +50,10 @@ void Snake::addToFrame(GGrid frame) {
 }
 uint8_t Snake::getSize() {
   return this->body.getSize() | 0;
+}
+
+bool Snake::isColidingWith(int8_t x, int8_t y) {
+  return this->body.isColidingWith(x, y);
 }
 
 bool Body::addNewSegment(int8_t x, int8_t y) {
@@ -81,6 +85,14 @@ void Body::move(int8_t x, int8_t y) {
     this->array[i] = oldxy;
     oldxy = auxOldxy;
   };
+}
+
+bool Body::isColidingWith(int8_t x, int8_t y) {
+  uint8_t xy = x | (y << 4);
+  for (int i = 0; i < this->size; i++) {
+    if (this->array[i] == xy) return true;  // This is the end.
+  }
+  return false;
 }
 
 void Body::reset() {
