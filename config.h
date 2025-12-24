@@ -2,9 +2,10 @@
 #define CONFIG_H
 
 /*
-  The purpose of this file is to hold const values that when modifield should:
+  The purpose of this file is to hold const values for:
   1. Make the game compatible with other screen types and sizes
   2. Alter key game behaviour
+  3. Alter IO pins
 */
 
 #include <Adafruit_ST7735.h>
@@ -25,13 +26,13 @@
 #define SQR_SIZE 10
 #define SQR_GAP 2
 #define SQR_TSIZE 12
-//Used in Tetris
+// Used in Tetris
 #define MOVE_COUNT_DOWN 10  // In ticks.
 #define ROW_SIZE 4
 #define ROW_SQR_SIZE 16
-#define L_MSK_C1 0b1000100010001000
-#define R_MSK_C1 0b0001000100010001
-#define R_MSK_C2 0b0010001000100010
+#define L_WALL_MSK 0b1000100010001000
+#define R_WALL_MSK_COL3 0b0001000100010001
+#define R_WALL_MSK_COL4 0b0010001000100010
 // Used in Snakes
 #define MOVE_COUNT 5             // In ticks.
 #define HIGH_NIB_MSK 0b11110000  // Nib = Nibble = half-byte = 4bits.
@@ -49,7 +50,7 @@
 #define TXT_HEIGHT 12
 #define BG_COLOR ST77XX_BLACK
 #define FG_COLOR ST77XX_WHITE
-//Used for Tetris
+// Used for Tetris
 #define NXT_SQR_SIZE 5
 #define NXT_SQR_GAP 1
 #define NXT_SQR_TSIZE 6
@@ -61,9 +62,8 @@
 #define BLACK_IDX 0
 
 static const uint16_t colors[] = {
-  ST77XX_BLACK, ST77XX_RED, ST77XX_GREEN, ST77XX_BLUE,
-  ST77XX_YELLOW, ST77XX_ORANGE, ST77XX_MAGENTA
-};
+    ST77XX_BLACK, ST77XX_RED, ST77XX_GREEN, ST77XX_BLUE,
+    ST77XX_YELLOW, ST77XX_ORANGE, ST77XX_MAGENTA};
 
 using GGrid = uint8_t[BLOB_W][BLOB_H];
 

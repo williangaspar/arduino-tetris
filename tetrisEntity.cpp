@@ -23,7 +23,7 @@ bool Shape::isCollidingWithLeftWall(int8_t leftWallx) {
   int8_t minx = this->x;
   uint16_t shape = this->getShape();
 
-  if ((shape & L_MSK_C1) == 0) minx++;
+  if ((shape & L_WALL_MSK) == 0) minx++;
   return minx < leftWallx;
 }
 
@@ -31,8 +31,8 @@ bool Shape::isCollidingWithRightWall(int8_t rightWallx) {
   int8_t maxx = this->x + 2;
   uint16_t shape = this->getShape();
 
-  if ((shape & R_MSK_C1) == 0) maxx--;
-  if ((shape & R_MSK_C2) == 0) maxx--;
+  if ((shape & R_WALL_MSK_COL3) == 0) maxx--; 
+  if ((shape & R_WALL_MSK_COL4) == 0) maxx--;
   return maxx >= (rightWallx - 1);
 }
 
