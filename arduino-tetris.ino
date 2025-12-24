@@ -5,14 +5,7 @@
 #include "screen.h"
 #include "snakes.h"
 #include "tetris.h"
-
-#define BTN_UP A2
-#define BTN_DOWN A5
-#define BTN_LEFT A1
-#define BTN_RIGHT A3
-#define BTN_PAUSE A4
-#define BUZZER 5
-#define SAVE_GAME_ID 9
+#include "sound.h"
 
 bool isButtonPressed = false;
 int currentHighScore = 0;
@@ -122,7 +115,7 @@ void loop() {
     menu.pointingToIndex = 0;
     Screen::printPause(menuItems);
     Screen::printMenu(menu, menuItems);
-    tone(BUZZER, 131, 200);
+    Sound::pause();
     delay(TICK_SPEED);
     bool didSaveTheGame = false;
     int8_t currentActiveGameIndex = menu.activeGameIndex;
@@ -133,17 +126,13 @@ void loop() {
           menu.pointingToIndex--;
         }
         Screen::printMenu(menu, menuItems);
-        tone(BUZZER, 880, 50);
-        delay(50);
-        tone(BUZZER, 1318, 50);
+        Sound::menuNav();
       } else if (userInput == Input::Down) {
         if (menu.pointingToIndex < GAME_MENU_ITEM_SIZE - 1) {
           menu.pointingToIndex++;
         }
         Screen::printMenu(menu, menuItems);
-        tone(BUZZER, 880, 50);
-        delay(50);
-        tone(BUZZER, 1318, 50);
+        Sound::menuNav();
       } else if (userInput == Input::Right) {
         if (menuItems[menu.pointingToIndex].id == SAVE_GAME_ID) {
           didSaveTheGame = true;
@@ -152,7 +141,7 @@ void loop() {
           menu.activeGameIndex = menu.pointingToIndex;
           Screen::printMenu(menu, menuItems);
         }
-        tone(BUZZER, 880, 100);
+        Sound::menuSelect();
       }
       delay(TICK_SPEED);
     };
@@ -165,7 +154,7 @@ void loop() {
       game->start();
       Screen::resetFrame(frame);
     }
-    tone(BUZZER, 262, 200);
+    Sound::unpause();
     Screen::reset();
     game->addEntitiesToFrame(frame);
     Screen::updateScore(game->getScore());
@@ -181,24 +170,19 @@ void loop() {
   Events& events = game->tick(userInput);
 
   if (events.isNewPoints) {
-    tone(BUZZER, 440, 100);
-    delay(100);
-    tone(BUZZER, 880, 200);
+    Sound::points();
     if (game->id == tetris.id) delay(200);
     Screen::updateScore(game->getScore());
   };
 
   if (events.isNewShape && game->id == tetris.id) {
     Screen::updateNextShape(tetris.getNextShape(), tetris.getNextColor());
-    tone(BUZZER, 440, 100);
+    Sound::nextShape();
   };
 
   if (events.isGameOver) {
     Screen::printGameOver();
-    tone(BUZZER, 554, 200);
-    delay(200);
-    tone(BUZZER, 277, 400);
-    delay(1000);
+    Sound::gameOver();
     userInput = Input::None;
 
     int newScore = game->getScore();
