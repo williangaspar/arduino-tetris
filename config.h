@@ -17,7 +17,6 @@
 #define BTN_RIGHT A3
 #define BTN_PAUSE A4
 #define BUZZER 5
-#define SAVE_GAME_ID 9
 
 /* Game */
 #define BLOB_W 8
@@ -40,7 +39,7 @@
 
 /* Game menu */
 #define GAME_LIST_SIZE 2
-#define GAME_MENU_ITEM_SIZE GAME_LIST_SIZE + 1
+#define GAME_MENU_ITEM_SIZE GAME_LIST_SIZE + 2
 
 /* Screen/display */
 #define SCR_HEIGHT 160

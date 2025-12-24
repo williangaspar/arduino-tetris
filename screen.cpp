@@ -87,7 +87,7 @@ void Screen::printGameOver() {
   Screen::printText(over, x, tft.getCursorY(), FG_COLOR);
 }
 
-void Screen::printPause(GameMenuItem items[GAME_LIST_SIZE + 1]) {
+void Screen::printPause(GameMenuItem items[GAME_MENU_ITEM_SIZE]) {
   tft.fillScreen(BG_COLOR);
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = TXT_HEIGHT * 2;
@@ -96,15 +96,22 @@ void Screen::printPause(GameMenuItem items[GAME_LIST_SIZE + 1]) {
   Screen::resetFrame(currentFrame);
 }
 
-void Screen::printMenu(GameMenu menu, GameMenuItem items[GAME_LIST_SIZE + 1]) {
+void Screen::printMenu(GameMenu menu, GameMenuItem items[GAME_MENU_ITEM_SIZE]) {
   int x = (BLOB_W * SQR_TSIZE) / 2 - 36;
   int y = TXT_HEIGHT * 3 + SM_PAD;
   tft.setTextSize(1);
 
-  for (int i = 0; i <= GAME_LIST_SIZE; i++) {
+  for (int i = 0; i < GAME_MENU_ITEM_SIZE; i++) {
     y += TXT_HEIGHT + SM_PAD;
-    uint16_t arrowColor = menu.pointingToIndex == i ? ST7735_BLUE : BG_COLOR;
+    uint16_t arrowColor = BG_COLOR;
     uint16_t textColor = menu.activeGameIndex == i ? ST7735_BLUE : FG_COLOR;
+
+    if (menu.pointingToIndex == i) {
+      arrowColor = ST7735_BLUE;
+      if (i >= GAME_LIST_SIZE) // Sorry for the magical numbers, I was trying to minimize screen flicking
+        tft.fillRect(53, y, 25, TXT_HEIGHT - 4, BG_COLOR);
+    }
+
     Screen::printText(items[i].name, x + 10, y, textColor);
     tft.fillTriangle(x, y, x + 6, y + 3, x, y + 6, arrowColor);
   };
