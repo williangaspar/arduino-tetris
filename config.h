@@ -11,12 +11,17 @@
 #include <Adafruit_ST7735.h>
 
 /* User IO: Buttons and Buzzer */
-#define BTN_UP A2
-#define BTN_DOWN A5
-#define BTN_LEFT A1
-#define BTN_RIGHT A3
-#define BTN_PAUSE A4
-#define BUZZER 5
+#define BTN_LEFT 8
+#define BTN_RIGHT 9
+#define BTN_UP 7
+#define BTN_DOWN 10
+#define BTN_PAUSE 6
+#define BUZZER 5 // You can't use 12 if you're using SPI
+
+/* TFT screen */
+#define TFT_CS A5
+#define TFT_DC A4
+#define TFT_RST A3
 
 /* Game */
 #define BLOB_W 8

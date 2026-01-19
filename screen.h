@@ -8,10 +8,6 @@
 #include "config.h"
 #include "game.h"
 
-#define TFT_CS 10
-#define TFT_RST 7
-#define TFT_DC 9
-
 class Screen {
 public:
   static void start(GGrid nextFrame);

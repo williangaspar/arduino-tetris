@@ -20,7 +20,7 @@ Snakes snakes(1, "Snakes");
 Game* games[GAME_LIST_SIZE] = { &tetris, &snakes };
 Game* game = &tetris;
 
-// You ditch this declaration and copy the string to GameMenuItem directly if you want to crash the game. :)
+// You can ditch this declaration and copy the string to GameMenuItem directly if you want to crash the game. :)
 char soundMenuText[] = "Sound:on ";
 
 // You can change the order, add or remove items. But keep the IDs the same, and avoid duplicated IDs!
