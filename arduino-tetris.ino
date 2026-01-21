@@ -194,7 +194,7 @@ void onPause(Input& userInput) {
     setCurrentGame(menuItems[menu.activeGameIndex].id);
     storeData(SAVE_GAME_ID, game->id);
     currentHighScore = loadStoredData(menuItems[menu.activeGameIndex].id);
-    if (currentHighScore > 0) currentHighScore = 0;
+    if (currentHighScore < 0) currentHighScore = 0;
     game->start();
     Screen::resetFrame(frame);
   }
