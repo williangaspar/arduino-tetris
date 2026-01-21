@@ -14,6 +14,7 @@ public:
   static void menuNav();
   static void menuSelect();
   static void nextShape();
+  static void start();
 
 private:
   static void play(int toneFreq, int ms);  // This will break if the time greater than 32s.

@@ -112,6 +112,7 @@ void setup() {
   currentHighScore = loadStoredData(savedGameId);
   if (currentHighScore < 0) currentHighScore = 0;
   Screen::start(frame);
+  Sound::start();
   Screen::updateHighScore(currentHighScore);
 
   setCurrentGame(savedGameId);

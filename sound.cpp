@@ -31,6 +31,14 @@ void Sound::points() {
   play(880, 200);
 }
 
+void Sound::start() {
+  play(392, 100);
+  wait(100);
+  play(523, 100);
+  wait(100);
+  play(784, 200);
+}
+
 void Sound::nextShape() {
   play(440, 100);
 }
