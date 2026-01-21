@@ -62,6 +62,20 @@ void Snakes::getNewFood() {
   */
   for (int i = 0; i < 3; i++) {
     if (snake.isColidingWith(food.x, food.y)) {
+      if (food.x < (BLOB_W - 1) && !snake.isColidingWith(food.x + 1, food.y)) {
+        food.x++;
+        return;
+      } else if (food.x > 0 && !snake.isColidingWith(food.x - 1, food.y)) {
+        food.x--;
+        return;
+      } else if (food.y < (BLOB_H - 1) && !snake.isColidingWith(food.x, food.y + 1)) {
+        food.y++;
+        return;
+      } else if (food.y > 0 && !snake.isColidingWith(food.x, food.y - 1)) {
+        food.y--;
+        return;
+      }
+
       food.x = random(0, BLOB_W);
       food.y = random(0, BLOB_H);
     } else {
