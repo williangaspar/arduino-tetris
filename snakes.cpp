@@ -54,16 +54,16 @@ void Snakes::addEntitiesToFrame(GGrid frame) {
 };
 
 void Snakes::getNewFood() {
-  food.x = random(0, BLOB_W - 1);
-  food.y = random(0, BLOB_H - 1);
+  food.x = random(0, BLOB_W);
+  food.y = random(0, BLOB_H);
 
   /* As my grandma used to say: if first you dont't succeed, try again.
   But if that fails too, give up already.
   */
   for (int i = 0; i < 3; i++) {
     if (snake.isColidingWith(food.x, food.y)) {
-      food.x = random(0, BLOB_W - 1);
-      food.y = random(0, BLOB_H - 1);
+      food.x = random(0, BLOB_W);
+      food.y = random(0, BLOB_H);
     } else {
       return;
     }
