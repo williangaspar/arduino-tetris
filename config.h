@@ -26,12 +26,12 @@
 /* Game */
 #define BLOB_W 8
 #define BLOB_H 13
-#define TICK_SPEED 50  // In ms.
+#define TICK_SPEED 56  // In ms.
 #define SQR_SIZE 10
 #define SQR_GAP 2
 #define SQR_TSIZE 12
 // Used in Tetris
-#define MOVE_COUNT_DOWN 10  // In ticks.
+#define MOVE_COUNT_DOWN 12  // In ticks.
 #define ROW_SIZE 4
 #define ROW_SQR_SIZE 16
 #define L_WALL_MSK 0b1000100010001000
