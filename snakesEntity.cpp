@@ -49,7 +49,7 @@ void Snake::addToFrame(GGrid frame) {
   this->body.addToFrame(frame);
 }
 uint8_t Snake::getSize() {
-  return this->body.getSize() | 0;
+  return this->body.getSize();
 }
 
 bool Snake::isColidingWith(int8_t x, int8_t y) {
@@ -57,7 +57,9 @@ bool Snake::isColidingWith(int8_t x, int8_t y) {
 }
 
 bool Body::addNewSegment(int8_t x, int8_t y) {
-  if (this->size >= sizeof(GGrid)) { return false; }  // We ate too much already
+  if (this->size >= sizeof(GGrid)) {
+    return false;
+  }  // We ate too much already
 
   if (this->size == 0) {
     /* IMPORTANT: Here I'm assumming the initial direction is alway to the right, and that we are not
