@@ -3,6 +3,7 @@
 namespace {
 LiveEntity food;
 Snake snake;
+bool directionJustChanged = false;
 }  // namespace
 
 void Snakes::start() {
@@ -15,18 +16,24 @@ void Snakes::start() {
 Events& Snakes::tick(Input userInput) {
   Game::events.reset();
 
-  if (userInput == Input::Up && snake.direction != Direction::DOWN) {
-    snake.direction = Direction::UP;
-  } else if (userInput == Input::Down && snake.direction != Direction::UP) {
-    snake.direction = Direction::DOWN;
-  } else if (userInput == Input::Left && snake.direction != Direction::RIGHT) {
-    snake.direction = Direction::LEFT;
-  } else if (userInput == Input::Right && snake.direction != Direction::LEFT) {
-    snake.direction = Direction::RIGHT;
-  };
+  // This check prevents the user killing from the snake by changing direction faster then it can move.
+  if (!directionJustChanged) {
+    if (userInput == Input::Up && snake.direction != Direction::DOWN) {
+      snake.direction = Direction::UP;
+      directionJustChanged = true;
+    } else if (userInput == Input::Down && snake.direction != Direction::UP) {
+      snake.direction = Direction::DOWN;
+      directionJustChanged = true;
+    } else if (userInput == Input::Left && snake.direction != Direction::RIGHT) {
+      snake.direction = Direction::LEFT;
+      directionJustChanged = true;
+    } else if (userInput == Input::Right && snake.direction != Direction::LEFT) {
+      snake.direction = Direction::RIGHT;
+      directionJustChanged = true;
+    };
+  }
 
   if (Game::moveCounter >= MOVE_COUNT) {
-
     if (!snake.move()) {
       Game::events.isGameOver = true;
     } else {
@@ -37,7 +44,7 @@ Events& Snakes::tick(Input userInput) {
         Game::events.isNewPoints = true;
       };
     }
-
+    directionJustChanged = false;
     Game::moveCounter = 0;
   };
 
