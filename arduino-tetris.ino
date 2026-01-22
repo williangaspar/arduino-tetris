@@ -223,8 +223,12 @@ void loop() {
   Events& events = game->tick(userInput);
 
   if (events.isNewPoints) {
-    Sound::points();
-    if (game->id == tetris.id) delay(200);
+    if (game->id == tetris.id) {
+      Sound::points();
+      delay(200);
+    } else {
+      Sound::pointsSimple();
+    }
     Screen::updateScore(game->getScore());
   };
 

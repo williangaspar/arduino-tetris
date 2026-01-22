@@ -11,6 +11,7 @@ public:
   static void pause();
   static void unpause();
   static void points();
+  static void pointsSimple();
   static void menuNav();
   static void menuSelect();
   static void nextShape();

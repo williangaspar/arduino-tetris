@@ -31,6 +31,10 @@ void Sound::points() {
   play(880, 200);
 }
 
+void Sound::pointsSimple() {
+  play(440, 100);
+}
+
 void Sound::start() {
   play(392, 100);
   wait(100);
