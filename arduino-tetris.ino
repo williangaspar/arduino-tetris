@@ -191,7 +191,7 @@ void onPause(Input& userInput) {
 
   if (!didSaveTheGame) {
     menu.activeGameIndex = currentActiveGameIndex;
-  } else {
+  } else if (menu.activeGameIndex != currentActiveGameIndex) {
     setCurrentGame(menuItems[menu.activeGameIndex].id);
     storeData(SAVE_GAME_ID, game->id);
     currentHighScore = loadStoredData(menuItems[menu.activeGameIndex].id);
