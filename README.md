@@ -52,9 +52,9 @@ This project should run with the Ardiono IDE, make sure the following libraries 
 ## Hardware
 
 - Arduino board or compatible
-- 5 buttons with a pull-up resistor (~1k should do it)
+- 5 push buttons
 - A passive piezzo buzzer
-- A TFT LDC 128x160 screen. (you can choose something else, but you will have to alter the `screens.cpp` file)
+- A TFT LDC 128x160 screen. If the screen is 3.3v and your board is 5v, you will need to use the 3.3v power pin (if available), and put a resitor (~2k ohm) in all pins connecting the board to the screen. (you can choose something else, but you will have to alter the `screens.cpp` file).
 
 ---
 
