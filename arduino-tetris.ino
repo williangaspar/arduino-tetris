@@ -256,6 +256,7 @@ void loop() {
 
     if (userInput == Input::Pause) {
       onPause(userInput);
+      return;
     };
 
     // And here we go again.
