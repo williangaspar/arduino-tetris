@@ -82,7 +82,7 @@ bool TetrisBlob::isCollidingWithShape(Shape& shape) {
       // This should catch any overlap: top, bottom, left or right.
       // If the shape is touching the blob, this should trigger.
       // When that happens, the caller should undo the last move.
-      if (posy >= 0 && Blob::grid[posx][posy] > 0 || posy >= BLOB_H) {
+      if (posy >= BLOB_H || (posy >= 0 && Blob::grid[posx][posy] > 0)) {
         return true;
       }
     }
