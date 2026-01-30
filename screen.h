@@ -25,7 +25,6 @@ private:
   static void printLabelNumber(char* label, int newNumber, int oldNumber, int Offset);
   static void printText(char* text, int x, int y, uint16_t color);
   static void printNumber(int number, int x, int y, uint16_t color);
-  static void printBigText(char* msg1, char* msg2);
 };
 
 #endif
