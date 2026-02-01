@@ -36,9 +36,8 @@ void Snake::reset() {
   this->color = BLUE_IDX;
   this->x = 3;
   this->y = 3;
-  /* IMPORTANT: If you change the default direction it will break the game!
-    You will need to alter Body::addNewSegment to fix it.
-   */
+  /* IMPORTANT: If you change the default direction, it will break the game!
+    You will need to alter Body::addNewSegment to fix it. */
   this->direction = Direction::RIGHT;
   this->isDigesting = false;
   this->body.reset();
@@ -62,9 +61,8 @@ bool Body::addNewSegment(int8_t x, int8_t y) {
   }  // We ate too much already
 
   if (this->size == 0) {
-    /* IMPORTANT: Here I'm assumming the initial direction is alway to the right, and that we are not
-      touching the left wall. I might code the direction check later, but only if I need to.
-    */
+    /* IMPORTANT: Here I'm assuming the initial direction is always to the right, and that we are not
+      touching the left wall. I might code the direction check later, but only if I need to. */
     uint8_t xy = (x - 1) | (y << 4);
     this->array[0] = xy;
   } else {

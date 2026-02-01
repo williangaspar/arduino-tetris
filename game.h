@@ -1,5 +1,5 @@
 /*
-  The game class determines what a game is and what happens in a game. It's like an stage where things happens.
+  The game class determines what a game is and what happens in a game. It's like a stage where things happen.
 */
 
 #ifndef GAME_H
@@ -48,10 +48,9 @@ public:
     : id(id), name(name){};
 
 protected:
-  static Events events;  // Some event won't be used in every game, just ignore them
-  // Carefull! we're sharing the same score between all the games.
-  static int score;           // Why? 2KB of RAM, that's why!
-  static int8_t moveCounter;  // I'm assiming all games will use this.
+  static Events events;       // Some events won't be used in every game; just ignore them
+  static int score;           // Carefull! We're sharing the same score between all the games.
+  static int8_t moveCounter;  // I'm assuming all games will use this.
 };
 
 #endif

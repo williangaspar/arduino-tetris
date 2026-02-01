@@ -37,7 +37,7 @@ GameMenu menu = {
 };
 
 int loadStoredData(int8_t dataId) {   // dataId can be a gameId, but they are not the same.
-  int offset = sizeof(int) * dataId;  // A dataId can be anything, but gameId must be from a game.
+  int offset = sizeof(int) * dataId;  // A dataId can be anything, but a gameId must be from a game.
   int data = 0;
   EEPROM.get(offset, data);
   return data;
@@ -68,7 +68,7 @@ void setCurrentGame(int8_t gameId) {
 }
 
 void updateSoundText(int soundIdx) {
-  // This might me wastfull, but it is also harder to break, since it can account for a dinamic menu.
+  // This might be wastfull, but it is also harder to break, since it can account for a dynamic menu.
   if (soundIdx < 0) {
     for (int i = 0; i < GAME_MENU_ITEM_SIZE; i++) {
       if (menuItems[i].id == SOUND_ID) {
@@ -83,7 +83,7 @@ void updateSoundText(int soundIdx) {
   int len = strlen(menuItems[soundIdx].name);
 
   if (Sound::isEnabled) {
-    // Initial Text: Sound:off ; Final text: Sound:on
+    // Initial Text: Sound:off; Final text: Sound:on
     menuItems[soundIdx].name[len - 1] = ' ';
     menuItems[soundIdx].name[len - 2] = 'n';
   } else {

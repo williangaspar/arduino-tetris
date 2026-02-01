@@ -15,8 +15,8 @@ void Tetris::start() {
   this->getRandomShape(nextShape);
 }
 
-/* Here is where the heartbeat of the game happens. After the game start, any changes to the objects on the screen will be
-  dicted by this function. It processes the user input and returns an event object with averything that happened.  */
+/* Here is where the heartbeat of the game happens. After the game starts, any changes to the objects on the screen will be
+  dictated by this function. It processes the user input and returns an event object with everything that happened. */
 Events& Tetris::tick(Input userInput) {
   Game::events.reset();
 
@@ -40,19 +40,20 @@ Events& Tetris::tick(Input userInput) {
       currshape.setRotation(oldRotation);
     }
   } else if (userInput == Input::Down || Game::moveCounter >= MOVE_COUNT_DOWN) {
-    /*Two things can trigger the down moviment:
-    1. Ther user pressing the down button; 2. The move down counter getting to its limit;
+    /* 
+    Two things can trigger the down moviment:
+    1. The user pressing the down button; 2. The "move down" counter is getting to its limit.
     This "else" condition prevents double triggering of the events.
     If double triggering is allowed, the shape will go down faster, but a visual bug
     will happen when the shape is about to hit something after 2 ticks. The shape will not visually
-    hit the blob before an event like game over or points is triggered.
+    hit the blob before an event like game over, or points are triggered.
     */
     currshape.y++;
     if (blob.isCollidingWithShape(currshape)) {
       currshape.y--;
       blob.addShape(currshape);
 
-      if (currshape.y <= 0) {  // We're to close to the sun
+      if (currshape.y <= 0) {  // We're too close to the sun
         Game::events.isGameOver = true;
       }
 
