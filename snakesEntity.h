@@ -37,7 +37,6 @@ class Snake : public LiveEntity {
       : direction(Direction::RIGHT), LiveEntity() {};
   bool move();
   bool eat(LiveEntity& food);
-  bool getIsDigesting();
   void reset();
   void addToFrame(GGrid frame) override;
   uint8_t getSize();

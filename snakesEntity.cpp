@@ -4,8 +4,7 @@ bool Snake::eat(LiveEntity& food) {  // Yummy
   if (food.x > 15 || food.y > 15) {
     return false;
   };
-  this->isDigesting = body.addNewSegment(this->x, this->y);
-  return this->isDigesting;
+  return true;
 };
 
 bool Snake::move() {
@@ -28,10 +27,6 @@ bool Snake::move() {
   return !this->body.isColidingWith(this->x, this->y);
 }
 
-bool Snake::getIsDigesting() {
-  return this->isDigesting;
-}
-
 void Snake::reset() {
   this->color = BLUE_IDX;
   this->x = 3;
@@ -39,7 +34,6 @@ void Snake::reset() {
   /* IMPORTANT: If you change the default direction, it will break the game!
     You will need to alter Body::addNewSegment to fix it. */
   this->direction = Direction::RIGHT;
-  this->isDigesting = false;
   this->body.reset();
   this->body.addNewSegment(this->x, this->y);
 }
