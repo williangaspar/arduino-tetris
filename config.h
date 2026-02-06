@@ -31,7 +31,7 @@
 #define SQR_GAP 2
 #define SQR_TSIZE 12
 // Used in Tetris
-#define MOVE_COUNT_DOWN 12  // In ticks.
+#define MOVE_COUNT_DOWN 10  // In ticks.
 #define ROW_SIZE 4
 #define ROW_SQR_SIZE 16
 #define L_WALL_MSK 0b1000100010001000
