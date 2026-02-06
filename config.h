@@ -37,6 +37,8 @@
 #define L_WALL_MSK 0b1000100010001000
 #define R_WALL_MSK_COL3 0b0001000100010001
 #define R_WALL_MSK_COL4 0b0010001000100010
+#define TOP_MSK_ROW1 0b1111000000000000
+#define TOP_MSK_ROW2 0b0000111100000000
 // Used in Snakes
 #define MOVE_COUNT 5             // In ticks.
 #define HIGH_NIB_MSK 0b11110000  // Nib = Nibble = half-byte = 4bits.

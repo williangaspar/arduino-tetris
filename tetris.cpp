@@ -53,7 +53,12 @@ Events& Tetris::tick(Input userInput) {
       currshape.y--;
       blob.addShape(currshape);
 
-      if (currshape.y <= 0) {  // We're too close to the sun
+      int8_t shapey = currshape.y;
+      uint16_t shape = currshape.getShape();
+      if ((shape & TOP_MSK_ROW1) == 0) shapey++;
+      if ((shape & TOP_MSK_ROW2) == 0) shapey++;
+
+      if (shapey <= 0) {  // We're too close to the sun
         Game::events.isGameOver = true;
       }
 
