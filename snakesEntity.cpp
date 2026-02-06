@@ -4,7 +4,7 @@ bool Snake::eat(LiveEntity& food) {  // Yummy
   if (food.x > 15 || food.y > 15) {
     return false;
   };
-  return true;
+  return body.addNewSegment(this->x, this->y);;
 };
 
 bool Snake::move() {
