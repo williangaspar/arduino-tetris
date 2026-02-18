@@ -55,6 +55,7 @@ Events& Tetris::tick(Input userInput) {
 
       int8_t shapey = currshape.y;
       uint16_t shape = currshape.getShape();
+      
       if ((shape & TOP_MSK_ROW1) == 0) shapey++;
       if ((shape & TOP_MSK_ROW2) == 0) shapey++;
 
